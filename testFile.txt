@@ -1,0 +1,6 @@
+This is a test file. I want to send it from client to server.
+Will it get there?
+I think it will.
+Let's see what happens.
+Ready. Set....
+Go!
