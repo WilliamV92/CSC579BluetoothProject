@@ -3,6 +3,7 @@ import bluetooth
 from protocolConstants import *
 from pathlib import Path
 import os
+from cryptoutil import *
 
 
 # flag to turn logging on or off
@@ -11,6 +12,8 @@ LOGGING_ENABLED = True
 REMOTE_HOST_ADDRESS = '54:8C:A0:A8:EA:E4'
 # port on which remote peer is listening
 REMOTE_HOST_PORT = 3
+# master key
+MASTER_KEY = b'*%Hah%zgh&hFL#Db'
 
 # helper method for logging. Logging controlled with global flag.
 def log(message):
@@ -20,60 +23,66 @@ def log(message):
 # method for handling secure handshake
 def performHandshake(s):
     log("Starting secure handshake...")
+    session_key = None
+
     # send CLIENT HELLO
-    message = buildClientHello()
+    message, rsa_key_pair = buildClientHello()
     log("SENDING {}".format(message))
-    s.send(message.encode())
+    s.send(message)
 
     # *** wait for SERVER HELLO ***
+    server_public_key = None
     data = s.recv(1024)
     # validate SERVER HELLO
-    if data and validateServerHello(data.decode()):
-        message = buildKeyExchange()
-        log("SENDING {}".format(message))
-        s.send(message.encode())
+    if data:
+        isValid, server_public_key = validateServerHello(data)
+        if isValid:
+            message, session_key = buildKeyExchange(rsa_key_pair, server_public_key)
+            log("SENDING {}".format(message))
+            s.send(message)
     else:
         log("Handshake Failed.")
-        return False
+        return False, None
 
     # *** wait for SERVER SESSION BEGIN ***
     data = s.recv(1024)
     # validate SERVER SESSION BEGIN
-    if data and validateServerSessionBegin(data.decode()):
-        message = buildClientSessionBegin()
+    if data and validateServerSessionBegin(session_key, data):
+        message = buildClientSessionBegin(session_key)
         log("SENDING {}".format(message))
-        s.send(message.encode())
+        s.send(message)
     else:
         log("Handshake Failed.")
-        return False
+        return False, None
 
     # perform client authentication
-    if not performClientAuthentication(s):
+    if not performClientAuthentication(s, session_key):
         log("Handshake Failed.")
-        return False
+        return False, None
 
     log("Handshake Successful.")
-    return True
+    return True, session_key
 
-def performClientAuthentication(s):
+def performClientAuthentication(s, session_key):
     authSuccess = False
     while not authSuccess:
         # get username and password
         username = input("Enter username: ")
         password = input("Enter password: ")
         # build CLIENT AUTH message and send
-        message = buildClientAuth(username, password)
+        message = buildClientAuth(session_key, username, password)
         log("SENDING {}".format(message))
-        s.send(message.encode())
+        s.send(message)
         # *** wait for SERVER AUTH REPLY ***
         data = s.recv(1024)
         # validate SERVER AUTH REPLY
         if data:
-            if data.decode() == SERVER_AUTH_REPLY_TERMINATE:
+            reply = validateServerAuthReply(session_key, data)
+            if reply == SERVER_AUTH_REPLY_TERMINATE:
                 # if max client auth attempts exceeded, server drops connection.
-                log("RECEIVED {}".format(data.decode()))
+                log("Max client auth attempts exceeded.")
                 break
-            elif validateServerAuthReply(data.decode()):
+            elif reply == SERVER_AUTH_REPLY_AUTHORIZED:
                 log("Client Auth Succesful")
                 authSuccess = True
             else:
@@ -86,50 +95,101 @@ def performClientAuthentication(s):
 # Helper methods for constructing client side protocol handshake messages
 ###
 def buildClientHello():
-    message = CLIENT_HELLO
-    # generate key, hash, and add to message...and encrypt
-    return message
+    message = CLIENT_HELLO.encode()
+    # generate rsa public key pair and export public key to share with server
+    rsa_key_pair = generateRsaPublicKeyPair()
+    exported_public_key = getPublicKeyToExport(rsa_key_pair)
+    # build and encrypt message
+    message = message + exported_public_key
+    iv = generateAesIv()
+    message = encryptAndHash(MASTER_KEY, iv, message)
+    return message, rsa_key_pair
 
-def buildKeyExchange():
-    message = KEY_EXCHANGE
-    # generate key, hash and add to message...and encrypt
-    return message
+def buildKeyExchange(rsa_key_pair, server_public_key):
+    message = KEY_EXCHANGE.encode()
+    # generate 256 bit session key to use for AES
+    session_key = generateSessionKey(32)
+    print("session key:")
+    print(session_key)
+    # build 1st segment of message
+    message = message + session_key
+    # encrypt 1st segment of message with the server's public key
+    session_key_message_cipher_text = rsa_encrypt(server_public_key, message)
+    # sign session key with client's private key
+    signature = rsa_sign(rsa_key_pair, session_key)
+    print("session key signature:")
+    print(signature)
+    # encrypt client signature with the server's public key
+    signature_cipher_text = rsa_encrypt(server_public_key, signature)
+    complete_message = session_key_message_cipher_text + signature_cipher_text
+    # because of security of with RSA encryption, still encrypt this message with master key
+    iv = generateAesIv()
+    complete_message = encryptAndHash(MASTER_KEY, iv, complete_message)
+    return complete_message, session_key
 
-def buildClientSessionBegin():
-    message = CLIENT_SESSION_BEGIN
+def buildClientSessionBegin(session_key):
+    message = CLIENT_SESSION_BEGIN.encode()
     # generate counter, add to message...and encrypt
+    iv = generateAesIv()
+    message = encryptAndHash(session_key, iv, message)
     return message
 
-def buildClientAuth(username, password):
+def buildClientAuth(session_key, username, password):
     message = CLIENT_AUTH + " " + username + " " + password
     # encrypt
+    iv = generateAesIv()
+    message = encryptAndHash(session_key, iv, message.encode())
     return message
 
 ###
 # Helper methods for validating commands in the handshake process on client side.
 ###
+
+def parseCommandFromPayload(data, expected_command):
+    command = data[0:len(expected_command)]
+    payload = data[len(expected_command):]
+    return command, payload
+
 def validateServerHello(data):
     isValid = False
     log("RECEIVED {}".format(data))
-    if data == SERVER_HELLO:
-        isValid = True
-    return isValid
+    # decrypt message with mastery key and verify integrity by checking digest
+    data = decryptAndVerifyIntegrity(MASTER_KEY, data)
+    log("DECRYPTED {}".format(data))
+    if data is not None:
+        command, payload = parseCommandFromPayload(data, SERVER_HELLO)
+        if command.decode() == SERVER_HELLO:
+            server_public_key = importPublicKey(payload)
+            if server_public_key is not None:
+                isValid = True
+            else:
+                log("Error: Received malformed public key from client.")
+        else:
+            log("Error: Received unexpected command during handshake.")
+    return isValid, server_public_key
 
-def validateServerSessionBegin(data):
+def validateServerSessionBegin(session_key, data):
     isValid = False
     log("RECEIVED {}".format(data))
-    if data == SERVER_SESSION_BEGIN:
+    # decrypt message with session_key and verify integrity by checking digest
+    data = decryptAndVerifyIntegrity(session_key, data)
+    log("DECRYPTED {}".format(data))
+    if data is not None and data.decode() == SERVER_SESSION_BEGIN:
         isValid = True   
     return isValid
 
-def validateServerAuthReply(data):
-    isValid = False
+def validateServerAuthReply(session_key, data):
     log("RECEIVED {}".format(data))
-    if data == SERVER_AUTH_REPLY_AUTHORIZED:
-        isValid = True
-    elif data == SERVER_AUTH_REPLY_UNAUTHORIZED:
-        isValid = False
-    return isValid
+    data = decryptAndVerifyIntegrity(MASTER_KEY, data)
+    log("DECRYPTED {}".format(data))
+    reply = None
+    if data is not None and data.decode() == SERVER_AUTH_REPLY_AUTHORIZED:
+        reply = SERVER_AUTH_REPLY_AUTHORIZED
+    elif data is not None and data.decode() == SERVER_AUTH_REPLY_UNAUTHORIZED:
+        reply = SERVER_AUTH_REPLY_UNAUTHORIZED
+    elif data is not None and data.decode() == SERVER_AUTH_REPLY_TERMINATE:
+        reply = SERVER_AUTH_REPLY_TERMINATE
+    return reply
 
 # method for performing a file upload
 def fileUpload(s):
@@ -195,8 +255,11 @@ def main():
     log("Attempting to connect to remote peer at {}:{}.".format(REMOTE_HOST_ADDRESS, REMOTE_HOST_PORT))   
     s.connect((REMOTE_HOST_ADDRESS, REMOTE_HOST_PORT))
     log("Connection Successful.")
-    performHandshake(s)
-    handleSecureSession(s)
+    handshake_succesfull, session_key = performHandshake(s)
+    if handshake_succesfull:
+        handleSecureSession(s)
+    else:
+        log("Handshake failed. Terminating conneciton")
     s.close()
     print('connection closed')
 
