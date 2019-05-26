@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="441176a2-9e52-496b-b9b7-8b05f1ba9de7" name="Default Changelist" comment="" />
+    <list default="true" id="441176a2-9e52-496b-b9b7-8b05f1ba9de7" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../bluetoothVersion/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../bluetoothVersion/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bluetoothVersion/serverFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/../bluetoothVersion/serverFile.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,10 +162,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="292" />
-    <option name="y" value="86" />
-    <option name="width" value="1473" />
-    <option name="height" value="822" />
+    <option name="x" value="391" />
+    <option name="y" value="142" />
+    <option name="width" value="1474" />
+    <option name="height" value="823" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -185,7 +188,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../bluetoothVersion" />
     <property name="settings.editor.selected.configurable" value="settings.github" />
   </component>
   <component name="RecentsManager">

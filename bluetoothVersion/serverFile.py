@@ -295,7 +295,6 @@ def main():
         log("Waiting for connection...")
         conn, addr = s.accept()     
         log("Accepted connection from {}.".format(addr))
-        handshake_succcess = performHandshake(conn)
         handshake_succcess, session_key = performHandshake(conn)
         if handshake_succcess:
             handleSecureSession(conn)
