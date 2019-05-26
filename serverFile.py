@@ -1,6 +1,8 @@
 import socket
 import bluetooth
-from protocolConstants import *    
+from protocolConstants import *
+from pathlib import Path
+import os
 
 # flag to turn logging on or off
 LOGGING_ENABLED = True
@@ -151,20 +153,56 @@ def validateClientAuth(data):
 # method for handling a file upload
 def handleFileUpload(sock):
     log("Handling File Upload")
+    print("Waiting for file size")
+    fileSizeData = sock.recv(1024)
+    fileSize = int.from_bytes(fileSizeData, "little")
+    sock.send(fileSizeData)
     local_file = open('transferTestFile.txt', 'wb')
-    while 1:
-        data = sock.recv(1024)
-        if data:
-            local_file.write(data)
-        else:
-            local_file.close()
-            break
+    data = sock.recv(fileSize)
+    local_file.write(data)
+    local_file.close()
+
+# method for handling a file download
+def handleFileDownload(s):
+    print("Waiting for requested file name")
+    requestedFileName = s.recv(1024)
+    fileNameString = requestedFileName.decode('utf-8')
+    print(fileNameString)
+    my_file = Path(fileNameString)
+    if my_file.is_file() is True:
+        print("File found")
+        fileSize = os.path.getsize(fileNameString)
+        fileSizeBytes = bytes([fileSize])
+        print("Sending file size")
+        s.send(fileSizeBytes)
+        returnFileSize = s.recv(1024)
+        if returnFileSize == fileSizeBytes:
+            file_to_send = open(fileNameString, 'rb')
+            file_data = file_to_send.read()
+            s.send(file_data)
+    else:
+        print("File not found")
 
 # after succesful handshake, the client's secure session is handled by this method
 def handleSecureSession(sock):
     log("Secure session established...")
+    command = sock.recv(1024)
+    stringData = command.decode('utf-8')
+    print("Waiting for first command")
+    while stringData.strip().upper() != EXIT_COMMAND:
+        print("In command loop")
+        if stringData.strip().upper() == FILE_UPLOAD_CMD:
+            sock.send(FILE_UPLOAD_CMD.encode())
+            handleFileUpload(sock)
+        elif stringData.strip().upper() == FILE_RETRIEVE_CMD:
+            sock.send(FILE_RETRIEVE_CMD.encode())
+            handleFileDownload(sock)
+        print("Awaiting New Command")
+        command = sock.recv(1024)
+        stringData = command.decode('utf-8')
     # for now, let's just transfer a file as a test
-    handleFileUpload(sock)
+    # handleFileUpload(sock)
+    sock.send(EXIT_COMMAND.encode())
 
 # helper method for logging. Logging controlled with global flag.
 def log(message):

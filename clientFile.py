@@ -1,6 +1,9 @@
 import socket
 import bluetooth
 from protocolConstants import *
+from pathlib import Path
+import os
+
 
 # flag to turn logging on or off
 LOGGING_ENABLED = True
@@ -131,15 +134,59 @@ def validateServerAuthReply(data):
 # method for performing a file upload
 def fileUpload(s):
     log("Performing file upload")
-    file_to_send = open('testFile.txt', 'rb')
-    file_data = file_to_send.read()
-    s.send(file_data)
+    filename = input("Enter the full name of a file in this directory\n").strip()
+    my_file = Path(filename)
+    while my_file.is_file() is False:
+        filename = input("Please enter a valid file name\n").strip()
+        my_file = Path(filename)
+    fileSize = os.path.getsize(filename)
+    fileSizeBytes = bytes([fileSize])
+    print("Sending file size")
+    s.send(fileSizeBytes)
+    sizeConfirm = s.recv(1024)
+    sizeNumber = int.from_bytes(sizeConfirm, "little")
+    if(sizeNumber == fileSize):
+        print("Proceed with Upload")
+        file_to_send = open(filename, 'rb')
+        file_data = file_to_send.read()
+        s.send(file_data)
+    else:
+        print("Sizes do not match")
+        s.send("END".encode())
+
+# method for performing file download
+def fileDownload(s):
+    log("Handling File Download")
+    filename = input("Enter the full name of the file you wish to download\n").strip()
+    print("Sending requested file name")
+    s.send(filename.encode())
+    print("Waiting for file size")
+    fileSizeData = s.recv(1024)
+    fileSize = int.from_bytes(fileSizeData, "little")
+    local_file = open("testing.txt", 'wb')
+    s.send(fileSizeData)
+    print("Waiting for file")
+    data = s.recv(fileSize)
+    local_file.write(data)
+    local_file.close()
 
 # after succesful handshake, the secure session with a server is handled by this method
 def handleSecureSession(s):
     log("Secure session established...")
     # for now, let's just transfer a file as a test
-    fileUpload(s)
+    command = input("Enter a command or 'bye' to exit the program\n")
+    s.send(command.strip().upper().encode())
+    serverCommand = s.recv(1024)
+    serverStringCommand = serverCommand.decode('utf-8')
+    while serverStringCommand.strip().upper() != "BYE":
+        if command.strip().upper() == FILE_UPLOAD_CMD:
+            fileUpload(s)
+        elif command.strip().upper() == FILE_RETRIEVE_CMD:
+            fileDownload(s)
+        command = input("Enter a command or 'bye' to exit the program\n")
+        s.send(command.strip().upper().encode())
+        serverCommand = s.recv(1024)
+        serverStringCommand = serverCommand.decode('utf-8')
 
 # main to establish connection to remote peer and initiate secure session
 def main():
