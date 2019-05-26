@@ -75,16 +75,16 @@ def handleClientAuth(conn, session_key):
         if data:
             if validateClientAuth(data, session_key):
                 isValidUser = True
-                message = buildServerAuthReplyAuthorized()
+                message = buildServerAuthReplyAuthorized(session_key)
                 log("SENDING {}".format(message))
                 conn.send(message)
             else:
                 loginAttempts = loginAttempts + 1
                 message = ''
                 if loginAttempts >= MAX_AUTH_ATTEMPTS:
-                    message = buildServerAuthReplyTerminate()
+                    message = buildServerAuthReplyTerminate(session_key)
                 else:
-                    message = buildServerAuthReplyUnauthorized()
+                    message = buildServerAuthReplyUnauthorized(session_key)
                 log("SENDING {}".format(message))
                 conn.send(message)
         else:
@@ -112,32 +112,32 @@ def buildServerSessionBegin(session_key):
     message = encryptAndHash(session_key, iv, message)
     return message
 
-def buildServerAuthReplyAuthorized():
+def buildServerAuthReplyAuthorized(session_key):
     message = SERVER_AUTH_REPLY_AUTHORIZED.encode()
     # Encrypt
     iv = generateAesIv()
-    message = encryptAndHash(MASTER_KEY, iv, message)
+    message = encryptAndHash(session_key, iv, message)
     return message
 
-def buildServerAuthReplyUnauthorized():
+def buildServerAuthReplyUnauthorized(session_key):
     message = SERVER_AUTH_REPLY_UNAUTHORIZED.encode()
     # Encrypt
     iv = generateAesIv()
-    message = encryptAndHash(MASTER_KEY, iv, message)
+    message = encryptAndHash(session_key, iv, message)
     return message
 
-def buildServerAuthReplyTerminate():
+def buildServerAuthReplyTerminate(session_key):
     message = SERVER_AUTH_REPLY_TERMINATE.encode()
     # Encrypt
     iv = generateAesIv()
-    message = encryptAndHash(MASTER_KEY, iv, message)
+    message = encryptAndHash(session_key, iv, message)
     return message
 
-def buildConnectionClosed():
+def buildConnectionClosed(session_key):
     message = CONNECTION_CLOSED.encode()
     # encrypt
     iv = generateAesIv()
-    message = encryptAndHash(MASTER_KEY, iv, message)
+    message = encryptAndHash(session_key, iv, message)
     return message
 
 ###

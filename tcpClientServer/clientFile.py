@@ -180,7 +180,7 @@ def validateServerSessionBegin(session_key, data):
 
 def validateServerAuthReply(session_key, data):
     log("RECEIVED {}".format(data))
-    data = decryptAndVerifyIntegrity(MASTER_KEY, data)
+    data = decryptAndVerifyIntegrity(session_key, data)
     log("DECRYPTED {}".format(data))
     reply = None
     if data is not None and data.decode() == SERVER_AUTH_REPLY_AUTHORIZED:
