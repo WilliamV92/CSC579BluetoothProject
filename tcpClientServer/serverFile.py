@@ -63,12 +63,12 @@ def performHandshake(conn):
         return False, None
 
     # handle client authentication
-    isValidUser, persistence_key = handleClientAuth(conn, session_key)
+    isValidUser, persistence_key, masked_user_directory = handleClientAuth(conn, session_key)
     if not isValidUser:
         log("Handshake Failed.")
         return False, None
 
-    client_secure_session_keys = ClientSecureSessionKeys(session_key, persistence_key)
+    client_secure_session_keys = ClientSecureSessionKeys(session_key, persistence_key, masked_user_directory)
 
     log("Handshake Successful.")
     return True, client_secure_session_keys
@@ -78,21 +78,23 @@ def performHandshake(conn):
 # Both keys are produced during the handshake. The session key is unique to a session for a given user,
 # but the persistence key is the same for a given user across all sessions for that user.
 class ClientSecureSessionKeys:
-  def __init__(self, session_key, persistence_keys):
-    self.session_key = session_key
-    self.persistence_keys = persistence_keys
+    def __init__(self, session_key, persistence_keys, masked_user_directory):
+        self.session_key = session_key
+        self.persistence_keys = persistence_keys
+        self.masked_user_directory = masked_user_directory
 
 # method to handle client authentication
 def handleClientAuth(conn, session_key):
     isValidUser = False
     persistence_key = None
+    masked_user_directory = None
     loginAttempts = 0
     while not isValidUser and loginAttempts < MAX_AUTH_ATTEMPTS:
         # *** wait for CLIENT AUTH message ***
         data = conn.recv(1024)
         # validate CLIENT AUTH
         if data:
-            isValidUser, persistence_key = validateClientAuth(data, session_key)
+            isValidUser, persistence_key, masked_user_directory = validateClientAuth(data, session_key)
             if isValidUser:
                 isValidUser = True
                 message = buildServerAuthReplyAuthorized(session_key)
@@ -109,7 +111,7 @@ def handleClientAuth(conn, session_key):
                 conn.send(message)
         else:
             break
-    return isValidUser, persistence_key
+    return isValidUser, persistence_key, masked_user_directory
 
 ###
 # Helper methods for constructing server side protocol handshake messages
@@ -233,6 +235,7 @@ def validateClientSessionBegin(session_key, data):
 def validateClientAuth(data, session_key):
     isValid = False
     persistence_key = None
+    masked_user_directory = None
     log("RECEIVED {}".format(data))
     data = decryptAndVerifyIntegrity(session_key, data)
     log("DECRYPTED {}".format(data))
@@ -245,19 +248,17 @@ def validateClientAuth(data, session_key):
             if (username == "peter" or username == "will") and password == "pwd":
                 isValid = True
                 persistence_key = generatePersistenceKeyFromPassword(password)
-    return isValid, persistence_key
+                masked_user_directory = generateMaskedText(username.encode(), persistence_key)
+    return isValid, persistence_key, masked_user_directory
+
 
 '''
 Helper methods for storing and retrieving encrypted files
 '''
-def generateMaskedFileName(plaintext_file_name, persistence_key):
-    print("code here")
-    # filename should be encrypted with user's persistence key
-
-def generateMaskedUserDirectoryName(plaintext_username, persistence_key):
-    print("code here")
-    # user files should be saved in a directory with a masked name, which equals username
-    # encrypted with user's persistence key
+def generateMaskedFileName(plaintext_filename, persistence_key):
+    # filename is a keyed hash of the plaintext_filename, where the key used
+    # for the hash is the user's persitence key
+    return generateMaskedText(plaintext_filename.encode(), persistence_key)
 
 def storeFileEncrypted(plaintext_file_data, persistence_key):
     print("code here")

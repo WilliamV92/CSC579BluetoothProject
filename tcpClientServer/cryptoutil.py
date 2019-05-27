@@ -1,6 +1,7 @@
 from Crypto.Cipher import AES
 from Crypto.Hash import SHA256
 from Crypto.Hash import SHA
+from Crypto.Hash import HMAC
 from Crypto.Signature import PKCS1_v1_5
 from Crypto import Random
 from Crypto.PublicKey import RSA
@@ -13,26 +14,36 @@ for adding and removing padding.
 # the iv is prepended to the cipher text when returned, so it can be used by decryption method.
 # this method will pad the plaintext to the appropriate block size.
 def encrypt(key, iv, plaintext):
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    padded = pad(AES.block_size, plaintext)
-    print(b"padded plaintext+digest: " + padded)
-    cipher_text = cipher.encrypt(padded)
-    return iv + cipher_text
+    cipher_text = None
+    try:
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        padded = pad(AES.block_size, plaintext)
+        print(b"padded plaintext+digest: " + padded)
+        cipher_text = cipher.encrypt(padded)
+        cipher_text = iv + cipher_text
+    except Exception:
+        print(Exception)
+        cipher_text = None
+    return cipher_text
 
 
 # decrypts the specified cipher text with AES in CBC mode.
 # the method assumes the cipher text is prepended with the iv used during encryption.
 # after cipher text is decrypted, padding is removed from the resulting plaintext.
 def decrypt(block_size, key, ciphertext):
-    iv = ciphertext[0:block_size]
-    print("iv:")
-    print(iv)
-    ciphertext = ciphertext[block_size:]
-    print(ciphertext)
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    plaintext = cipher.decrypt(ciphertext)
-    unpadded = unpad(plaintext)
-    return unpadded
+    plaintext = None
+    try:
+        iv = ciphertext[0:block_size]
+        print("iv:")
+        print(iv)
+        ciphertext = ciphertext[block_size:]
+        print(ciphertext)
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        plaintext = cipher.decrypt(ciphertext)
+        plaintext = unpad(plaintext)
+    except:
+        plaintext = None
+    return plaintext
 
 def generateAesIv():
     return Random.new().read(AES.block_size)
@@ -127,6 +138,18 @@ def generatePersistenceKeyFromPassword(password):
     # take sha-256 hash of initial digest
     return sha256Hash(initial_digest)
 
+def generateMaskedText(text, persistence_key):
+    masked_text = None
+    try:
+        h = HMAC.new(persistence_key)
+        h.update(text)
+        print(h.hexdigest())
+        masked_text = h.hexdigest()
+    except:
+        masked_text = None
+    return masked_text
+
+
 '''
 Complex utility methods that combine encryption and data integrity operations
 '''
@@ -218,6 +241,13 @@ def rsa_decrypt(rsa_key, ciphertext):
 
 '''
 def main():
+
+    # code to test generated masked text with keyed hash
+    user_password = "userpassword"
+    persistence_key = generatePersistenceKeyFromPassword(user_password)
+    masked_username = generateMaskedText("will".encode(), persistence_key)
+    print(masked_username)
+
 
     # this sample works for reading a file, encrypting an image file, saving an encrypted file, reading it back in,
     # decrypting the data, then saving the file under a new name.
