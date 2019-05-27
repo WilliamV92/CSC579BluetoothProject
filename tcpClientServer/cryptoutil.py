@@ -108,11 +108,15 @@ def removeSha256Digest(text):
 # given data with a digest, this method will remove the digest, recalculate the digest for the original data,
 # and compare the recalculated and original digests. True is returned if the Hashes are the same.
 def verifyIntegrity(data):
-    text, digest = removeSha256Digest(data)
-    recalculated_digest = sha256Hash(text)
-    print("new hash: ")
-    print(recalculated_digest)
-    is_valid = True if digest == recalculated_digest else False
+    isValid = False
+    try:
+        text, digest = removeSha256Digest(data)
+        recalculated_digest = sha256Hash(text)
+        print("new hash: ")
+        print(recalculated_digest)
+        is_valid = True if digest == recalculated_digest else False
+    except:
+        is_valid = False
     return is_valid
 
 def generatePersistenceKeyFromPassword(password):
@@ -129,19 +133,26 @@ Complex utility methods that combine encryption and data integrity operations
 # Hashes the provided plaintext and encrypts the plaintext with appended digest
 # with AES in CBC mode. Returns cipher text
 def encryptAndHash(key, iv, plaintext):
-    plaintext = appendSha256Digest(plaintext)
-    print(b"plaintext + digest: " + plaintext)
-    ciphertext = encrypt(key, iv, plaintext)
+    ciphertext = None
+    try:
+        plaintext = appendSha256Digest(plaintext)
+        print(b"plaintext + digest: " + plaintext)
+        ciphertext = encrypt(key, iv, plaintext)
+    except:
+        ciphertext = None
     return ciphertext
 
 def decryptAndVerifyIntegrity(key, ciphertext):
-    data = decrypt(AES.block_size, key, ciphertext)
-    print(b"decrypted (data + digest): " + data)
-    isValid = verifyIntegrity(data)
-    print("isValid: {}".format(isValid))
     plaintext = None
-    if isValid:
-        plaintext, digest = removeSha256Digest(data)
+    try:
+        data = decrypt(AES.block_size, key, ciphertext)
+        print(b"decrypted (data + digest): " + data)
+        isValid = verifyIntegrity(data)
+        print("isValid: {}".format(isValid))
+        if isValid:
+            plaintext, digest = removeSha256Digest(data)
+    except:
+        plaintext = None
     return plaintext
 
 
@@ -157,31 +168,52 @@ def getPublicKeyToExport(rsa_key_pair):
     return public_key
 
 def importPublicKey(public_key):
-    rsa_public_key = RSA.importKey(public_key)
+    rsa_public_key = None
+    try:
+        rsa_public_key = RSA.importKey(public_key)
+    except:
+        rsa_public_key = None
     return rsa_public_key
 
 def rsa_sign(rsa_key, data):
-    hash = SHA.new(data)
-    signer = PKCS1_v1_5.new(rsa_key)
-    signature = signer.sign(hash)
+    signature = None
+    try:
+        hash = SHA.new(data)
+        signer = PKCS1_v1_5.new(rsa_key)
+        signature = signer.sign(hash)
+    except:
+        signature = None
     return signature
 
 def rsa_verify_signature(rsa_public_key, data, signature):
     verified = False
-    h = SHA.new(data)
-    verifier = PKCS1_v1_5.new(rsa_public_key)
-    if verifier.verify(h, signature):
-        verified = True
-        print("The signature is authentic.")
-    else:
-        print("The signature is not authentic.")
+    try:
+        h = SHA.new(data)
+        verifier = PKCS1_v1_5.new(rsa_public_key)
+        if verifier.verify(h, signature):
+            verified = True
+            print("The signature is authentic.")
+        else:
+            print("The signature is not authentic.")
+    except:
+        verified = False
     return verified
 
 def rsa_encrypt(rsa_public_key, plaintext):
-    return rsa_public_key.encrypt(plaintext, 32)[0]
+    ciphertext = None
+    try:
+        ciphertext = rsa_public_key.encrypt(plaintext, 32)[0]
+    except:
+        ciphertext = None
+    return ciphertext
 
 def rsa_decrypt(rsa_key, ciphertext):
-    return rsa_key.decrypt(ciphertext)
+    plaintext = None
+    try:
+        plaintext = rsa_key.decrypt(ciphertext)
+    except:
+        plaintext = None
+    return plaintext
 
 
 '''

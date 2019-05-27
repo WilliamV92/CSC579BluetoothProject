@@ -155,6 +155,7 @@ def parseCommandFromPayload(data, expected_command):
 
 def validateServerHello(data):
     isValid = False
+    server_public_key = None
     log("RECEIVED {}".format(data))
     # decrypt message with mastery key and verify integrity by checking digest
     data = decryptAndVerifyIntegrity(MASTER_KEY, data)
