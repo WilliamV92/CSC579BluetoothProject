@@ -203,13 +203,11 @@ def validateKeyExchange(data, rsa_key_pair, client_public_key):
     data = decryptAndVerifyIntegrity(MASTER_KEY, data)
     if data is not None:
         # parse key exchange message into two segments
-        first_segment = data[0:256]  # COMMAND + SESSION KEY
-        second_segment = data[256:]  # Client Signature of Session Key
-        # decrypt each segment with server's private key
+        first_segment = data[0:256]  # COMMAND + SESSION KEY encrypted with server's public key
+        client_signature = data[256:]  # Client Signature of Session Key
+        # decrypt first segment with server's private key
         first_segment_data = rsa_decrypt(rsa_key_pair, first_segment)
-        log("DECRYPTED with Km and Ksv- {}".format(first_segment_data))
-        client_signature = rsa_decrypt(rsa_key_pair, second_segment)
-        log("DECRYPTED with Km and Ksv- {}".format(second_segment))
+        log("DECRYPTED with Ksv- {}".format(first_segment_data))
         # parse first segment of message
         command, payload = parseCommandFromPayload(first_segment_data, KEY_EXCHANGE)
         if command.decode() == KEY_EXCHANGE:

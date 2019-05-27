@@ -122,10 +122,9 @@ def buildKeyExchange(rsa_key_pair, server_public_key):
     signature = rsa_sign(rsa_key_pair, session_key)
     print("session key signature:")
     print(signature)
-    # encrypt client signature with the server's public key
-    signature_cipher_text = rsa_encrypt(server_public_key, signature)
-    complete_message = session_key_message_cipher_text + signature_cipher_text
-    # because of security of with RSA encryption, still encrypt this message with master key
+    # build full message: 1st segment + signature
+    complete_message = session_key_message_cipher_text + signature
+    # encrypt and hash full message with MASTER_KEY
     iv = generateAesIv()
     complete_message = encryptAndHash(MASTER_KEY, iv, complete_message)
     return complete_message, session_key
