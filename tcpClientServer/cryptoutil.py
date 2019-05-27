@@ -104,6 +104,12 @@ def sha256Hash(text):
     print(h.digest())
     return h.digest()
 
+# returns a hex digest of given text using SHA-256
+def sha256HexDigest(text):
+    h = SHA256.new()
+    h.update(text)
+    return h.hexdigest()
+
 # appends a digest to specified text and returns it
 def appendSha256Digest(text):
     digest = sha256Hash(text)
@@ -238,9 +244,58 @@ def rsa_decrypt(rsa_key, ciphertext):
         plaintext = None
     return plaintext
 
+'''
+Methods to create user flat file database with mock user data and read from that encrypted file
+and populate a "user database" (i.e., dictionary of users and hashed passwords)
+'''
+def createMockUserDataForFile():
+    user1 = "peter"
+    password1 = "pwd1"
+    password1_hash = sha256HexDigest(password1.encode())
+    user2 = "will"
+    password2 = "1234"
+    password2_hash = sha256HexDigest(password2.encode())
+    user3 = "profkim"
+    password3 = "security"
+    password3_hash = sha256HexDigest(password3.encode())
+    list_of_users = [(user1, password1_hash), (user2, password2_hash), (user3, password3_hash)]
+    return list_of_users
+
+# user password file writer and reader
+def writeUsersFile(key, filename, list_of_users):
+    users_file = open(filename, 'wb')
+    file_data = ""
+    for user in list_of_users:
+        user_data = user[0] + " " + user[1]
+        file_data = file_data + user_data + "\n"
+    users_file.write(encryptAndHash(key, generateAesIv(), file_data.encode()))
+    users_file.close()
+
+def readUsersFile(key, filename):
+    user_database = {}
+    # read in encrypted file data from users directory
+    read_cipher_file = open(filename, 'rb')
+    encrypted_file_data = read_cipher_file.read()
+    read_cipher_file.close()
+    # decrypt file data
+    decrypted_file_data = decryptAndVerifyIntegrity(key, encrypted_file_data)
+    # decode file data to text, then split on end of line
+    decrypted_file_Text = decrypted_file_data.decode()
+    list_of_users = decrypted_file_Text.splitlines()
+    # iterate over users and add user and hashed password to dictionary
+    for user in list_of_users:
+        user_record = user.split(" ")
+        user_name = user_record[0]
+        hashed_password = user_record[1]
+        user_database[user_name] = hashed_password
+    return user_database
 
 '''
 def main():
+    # test code to set up a users file with plaintext usernames and hashed passwords
+    list_of_users = createMockUserDataForFile()
+    writeUsersFile(b'*%Hah%zgh&hFL#Db', "users", list_of_users)
+    user_database = readUsersFile(b'*%Hah%zgh&hFL#Db', "users")
 
     # code to test generated masked text with keyed hash
     user_password = "userpassword"
@@ -318,7 +373,6 @@ def main():
     print("decrypted text: ")
     print(decrypted_text)
     print(decrypted_text.decode())
-
 
 main()
 '''

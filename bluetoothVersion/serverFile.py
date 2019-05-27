@@ -14,6 +14,10 @@ SERVER_PORT = 3
 MAX_AUTH_ATTEMPTS = 3
 # master key
 MASTER_KEY = b'*%Hah%zgh&hFL#Db'
+# file name for encrypted file storing usernames and hashed passwords
+USERS_FILENAME = "users"
+# dictionary to store usernames and hashed passwords
+USER_DATABASE = {}
 
 # method for handling secure handshake
 def performHandshake(conn):
@@ -246,11 +250,21 @@ def validateClientAuth(data, session_key):
         if cmd == CLIENT_AUTH:
             username = tokens[2]
             password = tokens[3]
-            if (username == "peter" or username == "will") and password == "pwd":
-                isValid = True
-                persistence_key = generatePersistenceKeyFromPassword(password)
-                masked_user_directory = generateMaskedText(username.encode(), persistence_key)
-    return isValid, persistence_key, masked_user_directory
+            if username is not None and username != '' and password is not None and password != '':
+                hashed_password = sha256HexDigest(password.encode())
+                if authenticate_user(username, hashed_password):
+                    isValid = True
+                    persistence_key = generatePersistenceKeyFromPassword(password)
+                    masked_user_directory = generateMaskedText(username.encode(), persistence_key)
+        return isValid, persistence_key, masked_user_directory
+
+def authenticate_user(username, hashed_password):
+    valid_user = False
+    # check if user is registered in database
+    if username in USER_DATABASE:
+        # compare hashed password user provided in client auth message with stored hashed password
+        valid_user = True if hashed_password == USER_DATABASE[username] else False
+    return valid_user
 
 
 '''
@@ -330,6 +344,16 @@ def handleSecureSession(sock):
     # handleFileUpload(sock)
     sock.send(EXIT_COMMAND.encode())
 
+def initializeUsersDatabase():
+    log("Initializing users database.")
+    global USER_DATABASE
+    users_file = Path(USERS_FILENAME)
+    if not users_file.is_file():
+        # users file does not exist, so create it with seeded data
+        writeUsersFile(MASTER_KEY, USERS_FILENAME, createMockUserDataForFile())
+    # read user data and store in user dictionary
+    USER_DATABASE = readUsersFile(MASTER_KEY, USERS_FILENAME)
+
 # helper method for logging. Logging controlled with global flag.
 def log(message):
     if LOGGING_ENABLED:
@@ -338,6 +362,7 @@ def log(message):
 # Main method for accepting connection and initiating secure sessions
 def main():
     log("STARTING SECURE FILE TRANSFER SERVER")
+    initializeUsersDatabase()
     s = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
     s.bind(("", SERVER_PORT))
     s.listen(5)                
