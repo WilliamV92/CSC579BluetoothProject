@@ -191,9 +191,14 @@ def validateServerAuthReply(session_key, data):
         reply = SERVER_AUTH_REPLY_TERMINATE
     return reply
 
+# helper method for sending encrypted data with a given key
+def sendEncrypted(sock, session_key, message_data):
+    iv = generateAesIv()
+    encrypted_message_data = encryptAndHash(session_key, iv, message_data)
+    sock.send(encrypted_message_data)
 
 # method for performing a file upload
-def fileUpload(s):
+def fileUpload(s, session_key):
     log("Performing file upload")
     filename = input("Enter the full name of a file in this directory\n").strip()
     my_file = Path(filename)
@@ -215,14 +220,8 @@ def fileUpload(s):
         print("Sizes do not match")
         s.send("END".encode())
 
-# helper method for sending encrypted data with a given key
-def sendEncrypted(sock, session_key, message_data):
-    iv = generateAesIv()
-    encrypted_message_data = encryptAndHash(session_key, iv, message_data)
-    sock.send(encrypted_message_data)
-
 # method for performing file download
-def fileDownload(s):
+def fileDownload(s, session_key):
     log("Handling File Download")
     filename = input("Enter the full name of the file you wish to download\n").strip()
     print("Sending requested file name")
@@ -238,7 +237,7 @@ def fileDownload(s):
     local_file.close()
 
 # after succesful handshake, the secure session with a server is handled by this method
-def handleSecureSession(s):
+def handleSecureSession(s, session_key):
     log("Secure session established...")
     # for now, let's just transfer a file as a test
     command = input("Enter a command or 'bye' to exit the program\n")
@@ -262,9 +261,9 @@ def main():
     log("Attempting to connect to remote peer at {}:{}.".format(REMOTE_HOST_ADDRESS, REMOTE_HOST_PORT))   
     s.connect((REMOTE_HOST_ADDRESS, REMOTE_HOST_PORT))
     log("Connection Successful.")
-    handshake_succesfull, session_key = performHandshake(s)
-    if handshake_succesfull:
-        handleSecureSession(s)
+    handshake_successful, session_key = performHandshake(s)
+    if handshake_successful and session_key is not None:
+        handleSecureSession(s, session_key)
     else:
         log("Handshake failed. Terminating conneciton")
     s.close()

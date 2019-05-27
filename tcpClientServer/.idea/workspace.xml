@@ -4,7 +4,6 @@
     <list default="true" id="441176a2-9e52-496b-b9b7-8b05f1ba9de7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../bluetoothVersion/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../bluetoothVersion/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../bluetoothVersion/clientFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/../bluetoothVersion/clientFile.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bluetoothVersion/cryptoutil.py" beforeDir="false" afterPath="$PROJECT_DIR$/../bluetoothVersion/cryptoutil.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../bluetoothVersion/serverFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/../bluetoothVersion/serverFile.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/clientFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/clientFile.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/serverFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/serverFile.py" afterDir="false" />
@@ -84,12 +83,12 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="876" />
+          <entry key="py" value="955" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="876" />
+          <entry key="Python" value="955" />
         </counts>
       </usages-collector>
     </session>
@@ -113,27 +112,27 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/clientFile.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="82">
-              <caret line="210" column="43" lean-forward="true" selection-start-line="210" selection-start-column="43" selection-end-line="210" selection-end-column="43" />
+            <state relative-caret-position="201">
+              <caret line="266" column="9" lean-forward="true" selection-start-line="266" selection-start-column="9" selection-end-line="266" selection-end-column="9" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
-                <marker date="1558919503467" expanded="true" signature="7771:7911" ph="..." />
+                <marker date="1558963734723" expanded="true" signature="7921:7923" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/serverFile.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="231" selection-start-line="231" selection-end-line="231" />
+            <state relative-caret-position="153">
+              <caret line="302" column="56" lean-forward="true" selection-start-line="302" selection-start-column="56" selection-end-line="302" selection-end-column="56" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
-                <marker date="1558919558555" expanded="true" signature="4661:4778" ph="..." />
+                <marker date="1558963749574" expanded="true" signature="4661:4778" ph="..." />
               </folding>
             </state>
           </provider>
@@ -180,8 +179,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="167" />
-    <option name="y" value="43" />
+    <option name="x" value="106" />
+    <option name="y" value="22" />
     <option name="width" value="1840" />
     <option name="height" value="1027" />
   </component>
@@ -349,7 +348,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="134" y="35" width="1472" height="821" extended-state="0" />
+    <frame x="85" y="18" width="1472" height="821" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.8255319" visible="true" weight="0.22857143" />
@@ -487,24 +486,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/clientFile.py">
+    <entry file="file://$PROJECT_DIR$/serverFile.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="82">
-          <caret line="210" column="43" lean-forward="true" selection-start-line="210" selection-start-column="43" selection-end-line="210" selection-end-column="43" />
+        <state relative-caret-position="153">
+          <caret line="302" column="56" lean-forward="true" selection-start-line="302" selection-start-column="56" selection-end-line="302" selection-end-column="56" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
-            <marker date="1558919503467" expanded="true" signature="7771:7911" ph="..." />
+            <marker date="1558963749574" expanded="true" signature="4661:4778" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/serverFile.py">
+    <entry file="file://$PROJECT_DIR$/clientFile.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="231" selection-start-line="231" selection-end-line="231" />
+        <state relative-caret-position="201">
+          <caret line="266" column="9" lean-forward="true" selection-start-line="266" selection-start-column="9" selection-end-line="266" selection-end-column="9" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
-            <marker date="1558919558555" expanded="true" signature="4661:4778" ph="..." />
+            <marker date="1558963734723" expanded="true" signature="7921:7923" ph="..." />
           </folding>
         </state>
       </provider>
