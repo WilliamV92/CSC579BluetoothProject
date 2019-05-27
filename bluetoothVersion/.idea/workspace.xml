@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ccc6faeb-f207-4613-9f84-b029fbc882dd" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clientFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/clientFile.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cryptoutil.py" beforeDir="false" afterPath="$PROJECT_DIR$/cryptoutil.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/serverFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/serverFile.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tcpClientServer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tcpClientServer/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tcpClientServer/clientFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tcpClientServer/clientFile.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tcpClientServer/cryptoutil.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tcpClientServer/cryptoutil.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tcpClientServer/serverFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tcpClientServer/serverFile.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -62,10 +56,10 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cryptoutil.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
+            <state relative-caret-position="-2703">
               <caret line="5" column="32" lean-forward="true" selection-start-line="5" selection-start-column="32" selection-end-line="5" selection-end-column="32" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
@@ -74,7 +68,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/serverFile.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="259">
@@ -100,7 +94,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="1">
     <option name="x" value="41" />
     <option name="y" value="135" />
     <option name="width" value="1670" />
@@ -232,15 +226,15 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="33" y="108" width="1336" height="766" extended-state="0" />
+    <frame x="33" y="108" width="1336" height="766" extended-state="1" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27559662" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27559662" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.27330175" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.27330175" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -258,16 +252,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/cryptoutil.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="32" lean-forward="true" selection-start-line="5" selection-start-column="32" selection-end-line="5" selection-end-column="32" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/clientFile.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="140">
@@ -284,6 +268,16 @@
           <caret line="174" column="28" selection-start-line="174" selection-start-column="28" selection-end-line="174" selection-end-column="28" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cryptoutil.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2703">
+          <caret line="5" column="32" lean-forward="true" selection-start-line="5" selection-start-column="32" selection-end-line="5" selection-end-column="32" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
           </folding>
         </state>
       </provider>

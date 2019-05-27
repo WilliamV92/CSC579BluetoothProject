@@ -247,6 +247,27 @@ def validateClientAuth(data, session_key):
                 persistence_key = generatePersistenceKeyFromPassword(password)
     return isValid, persistence_key
 
+'''
+Helper methods for storing and retrieving encrypted files
+'''
+def generateMaskedFileName(plaintext_file_name, persistence_key):
+    print("code here")
+    # filename should be encrypted with user's persistence key
+
+def generateMaskedUserDirectoryName(plaintext_username, persistence_key):
+    print("code here")
+    # user files should be saved in a directory with a masked name, which equals username
+    # encrypted with user's persistence key
+
+def storeFileEncrypted(plaintext_file_data, persistence_key):
+    print("code here")
+    # code here to save file in encrypted form...look to crypto util for example
+
+def retrieveEncryptedFile(plaintext_filename, persistence_key):
+    print("code here")
+    # given plaintext filename, read in encrypted file, decrypt with user's persitence key,
+    # and return plaintext file data
+
 # helper method for sending encrypted data with a given key
 def sendEncrypted(sock, session_key, message_data):
     iv = generateAesIv()
