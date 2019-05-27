@@ -58,23 +58,37 @@ def performHandshake(conn):
         return False, None
 
     # handle client authentication
-    if not handleClientAuth(conn, session_key):
+    isValidUser, persistence_key = handleClientAuth(conn, session_key)
+    if not isValidUser:
         log("Handshake Failed.")
         return False, None
 
+    client_secure_session_keys = ClientSecureSessionKeys(session_key, persistence_key)
+
     log("Handshake Successful.")
-    return True, session_key
+    return True, client_secure_session_keys
+
+# object to hold the session key (for secure communications with the client)
+# and persistence key (for storing/retrieving user files on the server's local file system).
+# Both keys are produced during the handshake. The session key is unique to a session for a given user,
+# but the persistence key is the same for a given user across all sessions for that user.
+class ClientSecureSessionKeys:
+  def __init__(self, session_key, persistence_keys):
+    self.session_key = session_key
+    self.persistence_keys = persistence_keys
 
 # method to handle client authentication
 def handleClientAuth(conn, session_key):
     isValidUser = False
+    persistence_key = None
     loginAttempts = 0
     while not isValidUser and loginAttempts < MAX_AUTH_ATTEMPTS:
         # *** wait for CLIENT AUTH message ***
         data = conn.recv(1024)
         # validate CLIENT AUTH
         if data:
-            if validateClientAuth(data, session_key):
+            isValidUser, persistence_key = validateClientAuth(data, session_key)
+            if isValidUser:
                 isValidUser = True
                 message = buildServerAuthReplyAuthorized(session_key)
                 log("SENDING {}".format(message))
@@ -90,7 +104,7 @@ def handleClientAuth(conn, session_key):
                 conn.send(message)
         else:
             break
-    return isValidUser
+    return isValidUser, persistence_key
 
 ###
 # Helper methods for constructing server side protocol handshake messages
@@ -212,6 +226,7 @@ def validateClientSessionBegin(session_key, data):
 
 def validateClientAuth(data, session_key):
     isValid = False
+    persistence_key = None
     log("RECEIVED {}".format(data))
     data = decryptAndVerifyIntegrity(session_key, data)
     log("DECRYPTED {}".format(data))
@@ -223,7 +238,8 @@ def validateClientAuth(data, session_key):
             password = tokens[3]
             if (username == "peter" or username == "will") and password == "pwd":
                 isValid = True
-    return isValid
+                persistence_key = generatePersistenceKeyFromPassword(password)
+    return isValid, persistence_key
 
 # helper method for sending encrypted data with a given key
 def sendEncrypted(sock, session_key, message_data):
@@ -301,8 +317,8 @@ def main():
         log("Waiting for connection...")
         conn, addr = s.accept()     
         log("Accepted connection from {}.".format(addr))
-        handshake_successful, session_key = performHandshake(conn)
-        if handshake_successful:
+        handshake_successful, client_secure_session_keys = performHandshake(conn)
+        if handshake_successful and client_secure_session_keys is not None:
             handleSecureSession(conn)
         else:
             log("Handshake failed. Terminating conneciton")

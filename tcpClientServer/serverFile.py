@@ -57,23 +57,37 @@ def performHandshake(conn):
         return False, None
 
     # handle client authentication
-    if not handleClientAuth(conn, session_key):
+    isValidUser, persistence_key = handleClientAuth(conn, session_key)
+    if not isValidUser:
         log("Handshake Failed.")
         return False, None
 
+    client_secure_session_keys = ClientSecureSessionKeys(session_key, persistence_key)
+
     log("Handshake Successful.")
-    return True, session_key
+    return True, client_secure_session_keys
+
+# object to hold the session key (for secure communications with the client)
+# and persistence key (for storing/retrieving user files on the server's local file system).
+# Both keys are produced during the handshake. The session key is unique to a session for a given user,
+# but the persistence key is the same for a given user across all sessions for that user.
+class ClientSecureSessionKeys:
+  def __init__(self, session_key, persistence_keys):
+    self.session_key = session_key
+    self.persistence_keys = persistence_keys
 
 # method to handle client authentication
 def handleClientAuth(conn, session_key):
     isValidUser = False
+    persistence_key = None
     loginAttempts = 0
     while not isValidUser and loginAttempts < MAX_AUTH_ATTEMPTS:
         # *** wait for CLIENT AUTH message ***
         data = conn.recv(1024)
         # validate CLIENT AUTH
         if data:
-            if validateClientAuth(data, session_key):
+            isValidUser, persistence_key = validateClientAuth(data, session_key)
+            if isValidUser:
                 isValidUser = True
                 message = buildServerAuthReplyAuthorized(session_key)
                 log("SENDING {}".format(message))
@@ -89,7 +103,7 @@ def handleClientAuth(conn, session_key):
                 conn.send(message)
         else:
             break
-    return isValidUser
+    return isValidUser, persistence_key
 
 ###
 # Helper methods for constructing server side protocol handshake messages
@@ -211,6 +225,7 @@ def validateClientSessionBegin(session_key, data):
 
 def validateClientAuth(data, session_key):
     isValid = False
+    persistence_key = None
     log("RECEIVED {}".format(data))
     data = decryptAndVerifyIntegrity(session_key, data)
     log("DECRYPTED {}".format(data))
@@ -222,7 +237,8 @@ def validateClientAuth(data, session_key):
             password = tokens[3]
             if (username == "peter" or username == "will") and password == "pwd":
                 isValid = True
-    return isValid
+                persistence_key = generatePersistenceKeyFromPassword(password)
+    return isValid, persistence_key
 
 # helper method for sending encrypted data with a given key
 def sendEncrypted(sock, session_key, message_data):
@@ -231,7 +247,7 @@ def sendEncrypted(sock, session_key, message_data):
     sock.send(encrypted_message_data)
 
 # method for handling a file upload
-def handleFileUpload(sock):
+def handleFileUpload(sock, client_secure_session_keys):
     log("Handling File Upload")
     print("Waiting for file size")
     fileSizeData = sock.recv(1024)
@@ -243,7 +259,7 @@ def handleFileUpload(sock):
     local_file.close()
 
 # method for handling a file download
-def handleFileDownload(s):
+def handleFileDownload(s, client_secure_session_keys):
     print("Waiting for requested file name")
     requestedFileName = s.recv(1024)
     fileNameString = requestedFileName.decode('utf-8')
@@ -264,7 +280,7 @@ def handleFileDownload(s):
         print("File not found")
 
 # after succesful handshake, the client's secure session is handled by this method
-def handleSecureSession(sock):
+def handleSecureSession(sock, client_secure_session_keys):
     log("Secure session established...")
     command = sock.recv(1024)
     stringData = command.decode('utf-8')
@@ -273,10 +289,10 @@ def handleSecureSession(sock):
         print("In command loop")
         if stringData.strip().upper() == FILE_UPLOAD_CMD:
             sock.send(FILE_UPLOAD_CMD.encode())
-            handleFileUpload(sock)
+            handleFileUpload(sock, client_secure_session_keys)
         elif stringData.strip().upper() == FILE_RETRIEVE_CMD:
             sock.send(FILE_RETRIEVE_CMD.encode())
-            handleFileDownload(sock)
+            handleFileDownload(sock, client_secure_session_keys)
         print("Awaiting New Command")
         command = sock.recv(1024)
         stringData = command.decode('utf-8')
@@ -301,9 +317,9 @@ def main():
         log("Waiting for connection...")
         conn, addr = s.accept()     
         log("Accepted connection from {}.".format(addr))
-        handshake_successful, session_key = performHandshake(conn)
-        if handshake_successful:
-            handleSecureSession(conn)
+        handshake_successful, client_secure_session_keys = performHandshake(conn)
+        if handshake_successful and client_secure_session_keys is not None:
+            handleSecureSession(conn, client_secure_session_keys)
         else:
             log("Handshake failed. Terminating conneciton")
         log("Secure session ended. Closing connection.")
