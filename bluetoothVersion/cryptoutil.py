@@ -243,6 +243,27 @@ def rsa_decrypt(rsa_key, ciphertext):
     except:
         plaintext = None
     return plaintext
+'''
+Methods for storing and retrieving encrypted files
+'''
+# this method will take plaintext file data, hash and encrypt it with the persistence key
+# and save to a file name masked_file_name. Use generateMaskedFileName to create
+# a masked filename.
+def writeEncryptedFile(masked_file_name, plaintext_file_data, persistence_key):
+    iv = generateAesIv()
+    encrypted_file_data = encryptAndHash(persistence_key, iv, plaintext_file_data)
+    cipher_file = open(masked_file_name, 'wb')
+    cipher_file.write(encrypted_file_data)
+    cipher_file.close()
+
+# this method opens up the file with encrypted data, decrypts it with the persistence key, verifies integrity,
+# and returns plaintext bytes of the file
+def getEncryptedFileData(masked_file_name, persistence_key):
+    encrypted_file = open(masked_file_name, 'rb')
+    encrypted_file_data = encrypted_file.read()
+    encrypted_file.close()
+    decrypted_file_data = decryptAndVerifyIntegrity(persistence_key, encrypted_file_data)
+    return decrypted_file_data
 
 '''
 Methods to create user flat file database with mock user data and read from that encrypted file
@@ -292,6 +313,7 @@ def readUsersFile(key, filename):
 
 '''
 def main():
+
     # test code to set up a users file with plaintext usernames and hashed passwords
     list_of_users = createMockUserDataForFile()
     writeUsersFile(b'*%Hah%zgh&hFL#Db', "users", list_of_users)
@@ -300,32 +322,24 @@ def main():
     # code to test generated masked text with keyed hash
     user_password = "userpassword"
     persistence_key = generatePersistenceKeyFromPassword(user_password)
-    masked_username = generateMaskedText("will".encode(), persistence_key)
-    print(masked_username)
-
+    masked_filename = generateMaskedText("car.png".encode(), persistence_key)
+    print(masked_filename)
 
     # this sample works for reading a file, encrypting an image file, saving an encrypted file, reading it back in,
     # decrypting the data, then saving the file under a new name.
-    user_password = "userpassword"
-    persistence_key = generatePersistenceKeyFromPassword(user_password)
-    iv = generateAesIv()
-
+    # get data to work with
     file_to_send = open("car.png", 'rb')
     file_data = file_to_send.read()
-    file_cipher = encryptAndHash(persistence_key, iv, file_data)
+    # write encrypted file
+    writeEncryptedFile(masked_filename, file_data, persistence_key)
 
-    cipher_file = open("cipherFile", 'wb')
-    cipher_file.write(file_cipher)
-    cipher_file.close()
-
-    read_cipher_file = open("cipherFile", 'rb')
-    encrypted_file_data = read_cipher_file.read()
-    cipher_file.close()
-
-    decrypted_file = decryptAndVerifyIntegrity(persistence_key, encrypted_file_data)
-    local_file = open("carTest.png", 'wb')
+    # read encrypted file and get the data as plaintext
+    decrypted_file = getEncryptedFileData(masked_filename, persistence_key)
+    # write decrypted back out to file to confirm it worked
+    local_file = open("newCarTest.png", 'wb')
     local_file.write(decrypted_file)
     local_file.close()
+
 
 # Test code for RSA public key functions
     rsa_key_pair = generateRsaPublicKeyPair()

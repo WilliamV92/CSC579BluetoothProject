@@ -116,7 +116,7 @@ def buildKeyExchange(rsa_key_pair, server_public_key):
     print(session_key)
     # build 1st segment of message
     message = message + session_key
-    # encrypt 1st segment of message with the server's public key
+    # encrypt 1st segment of message with the server's public key, so only server can use this session key
     session_key_message_cipher_text = rsa_encrypt(server_public_key, message)
     # sign session key with client's private key
     signature = rsa_sign(rsa_key_pair, session_key)
