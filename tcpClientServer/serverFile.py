@@ -270,17 +270,21 @@ Helper methods for storing and retrieving encrypted files
 '''
 def generateMaskedFileName(plaintext_filename, persistence_key):
     # filename is a keyed hash of the plaintext_filename, where the key used
-    # for the hash is the user's persitence key
+    # for the hash is the user's persistence key
     return generateMaskedText(plaintext_filename.encode(), persistence_key)
 
-def storeFileEncrypted(plaintext_file_data, persistence_key):
-    print("code here")
-    # code here to save file in encrypted form...look to crypto util for example
+# given plaintext filename, create a masked file name, then encrypt/hash file data with persistence key
+# and write to file
+def storeFileEncrypted(plaintext_filename, plaintext_file_data, persistence_key):
+    masked_filename = generateMaskedFileName(plaintext_filename, persistence_key)
+    writeEncryptedFile(masked_filename, plaintext_file_data, persistence_key)
 
+# given plaintext filename, find file with masked name, read in encrypted file,
+#  decrypt with user's persitence key and return plaintext file data
 def retrieveEncryptedFile(plaintext_filename, persistence_key):
-    print("code here")
-    # given plaintext filename, read in encrypted file, decrypt with user's persitence key,
-    # and return plaintext file data
+    masked_filename = generateMaskedFileName(plaintext_filename, persistence_key)
+    decrypted_file_data = getEncryptedFileData(masked_filename, persistence_key)
+    return decrypted_file_data
 
 # helper method for sending encrypted data with a given key
 def sendEncrypted(sock, session_key, message_data):
