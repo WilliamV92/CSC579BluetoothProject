@@ -348,6 +348,12 @@ def sendEncrypted(sock, session_key, message_data):
 # method for handling a file upload
 def handleFileUpload(sock, client_secure_session_keys):
     log("Handling File Upload")
+    print("Waiting for file name")
+    filename_bytes = decryptAndVerifyIntegrity(client_secure_session_keys.session_key, sock.recv(1024))
+    filename = filename_bytes.decode('utf-8')
+    print("Filename")
+    print(filename)
+    sendEncrypted(sock, client_secure_session_keys.session_key, filename.encode())
     print("Waiting for file size")
     fileSizeData = decryptAndVerifyIntegrity(client_secure_session_keys.session_key, sock.recv(1024))
     fileSizeString = fileSizeData.decode('utf-8')
@@ -355,7 +361,6 @@ def handleFileUpload(sock, client_secure_session_keys):
     print("File size")
     print(fileSizeInt)
     sendEncrypted(sock, client_secure_session_keys.session_key, fileSizeString.encode())
-    local_file = open('transferTestFile.png', 'wb')
     bytes_read = 0
     encrypted_data = b""
     while(bytes_read < fileSizeInt):
@@ -366,8 +371,7 @@ def handleFileUpload(sock, client_secure_session_keys):
         encrypted_data = encrypted_data + next_chunk
     print(len(encrypted_data))
     data = decryptAndVerifyIntegrity(client_secure_session_keys.session_key, encrypted_data)
-    local_file.write(data)
-    local_file.close()
+    storeFileEncrypted(filename, data, client_secure_session_keys.persistence_keys)
 
 # method for handling a file download
 def handleFileDownload(s, client_secure_session_keys):

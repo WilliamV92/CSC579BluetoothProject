@@ -208,6 +208,13 @@ def fileUpload(s, session_key):
     while my_file.is_file() is False:
         filename = input("Please enter a valid file name\n").strip()
         my_file = Path(filename)
+    sendEncrypted(s, session_key, filename.encode())
+    fileNameConfirmData = decryptAndVerifyIntegrity(session_key, s.recv(1024))
+    fileNameConfirm = fileNameConfirmData.decode('utf-8')
+    if filename != fileNameConfirm:
+        print("Filenames do not match")
+        sendEncrypted(s, session_key, "END".encode())
+        return
     file_to_send = open(filename, 'rb')
     file_data = file_to_send.read()
     iv = generateAesIv()

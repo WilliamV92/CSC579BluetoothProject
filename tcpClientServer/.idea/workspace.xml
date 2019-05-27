@@ -4,6 +4,7 @@
     <list default="true" id="441176a2-9e52-496b-b9b7-8b05f1ba9de7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../bluetoothVersion/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../bluetoothVersion/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/clientFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/clientFile.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptoutil.py" beforeDir="false" afterPath="$PROJECT_DIR$/cryptoutil.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/serverFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/serverFile.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -81,48 +82,48 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="7595" />
+          <entry key="py" value="7839" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="7595" />
+          <entry key="Python" value="7839" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cryptoutil.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="38" column="18" selection-start-line="38" selection-start-column="8" selection-end-line="38" selection-end-column="18" />
+            <state relative-caret-position="219">
+              <caret line="335" column="5" lean-forward="true" selection-start-line="335" selection-start-column="5" selection-end-line="335" selection-end-column="5" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
-                <marker date="1558989152699" expanded="true" signature="2151:2156" ph="..." />
-                <marker date="1558989152699" expanded="true" signature="2355:2396" ph="..." />
-                <marker date="1558989152699" expanded="true" signature="4359:4364" ph="..." />
-                <marker date="1558989152699" expanded="true" signature="4664:4855" ph="..." />
-                <marker date="1558989152699" expanded="true" signature="7555:8240" ph="..." />
-                <marker date="1558989152699" expanded="true" signature="8456:8884" ph="..." />
-                <marker date="1558989152699" expanded="true" signature="9369:10058" ph="..." />
-                <marker date="1558989152699" expanded="true" signature="10070:10075" ph="..." />
-                <marker date="1558989152699" expanded="true" signature="10155:10332" ph="..." />
-                <marker date="1558989152699" expanded="true" signature="11284:11285" ph="..." />
+                <marker date="1559000033506" expanded="true" signature="2151:2156" ph="..." />
+                <marker date="1559000033506" expanded="true" signature="2355:2396" ph="..." />
+                <marker date="1559000033506" expanded="true" signature="4359:4364" ph="..." />
+                <marker date="1559000033506" expanded="true" signature="4664:4855" ph="..." />
+                <marker date="1559000033506" expanded="true" signature="7555:8240" ph="..." />
+                <marker date="1559000033506" expanded="true" signature="8456:8884" ph="..." />
+                <marker date="1559000033506" expanded="true" signature="9369:10055" ph="..." />
+                <marker date="1559000033506" expanded="true" signature="10067:10072" ph="..." />
+                <marker date="1559000033506" expanded="true" signature="10152:10332" ph="..." />
+                <marker date="1559000033506" expanded="true" signature="11291:11292" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/clientFile.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="197">
-              <caret line="225" column="38" selection-start-line="225" selection-start-column="38" selection-end-line="225" selection-end-column="38" />
+            <state relative-caret-position="163">
+              <caret line="209" column="22" selection-start-line="209" selection-start-column="22" selection-end-line="209" selection-end-column="22" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
-                <marker date="1558998329275" expanded="true" signature="11421:11424" ph="..." />
+                <marker date="1558999509487" expanded="true" signature="11756:11759" ph="..." />
               </folding>
             </state>
           </provider>
@@ -131,14 +132,14 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/serverFile.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="112">
-              <caret line="360" selection-start-line="360" selection-end-line="360" />
+            <state relative-caret-position="-618">
+              <caret line="369" column="25" lean-forward="true" selection-start-line="369" selection-start-column="25" selection-end-line="369" selection-end-column="25" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
-                <marker date="1558997154253" expanded="true" signature="5987:6104" ph="..." />
-                <marker date="1558997154253" expanded="true" signature="10216:10221" ph="..." />
-                <marker date="1558997154253" expanded="true" signature="10418:10544" ph="..." />
-                <marker date="1558997154253" expanded="true" signature="10625:10708" ph="..." />
+                <marker date="1558999844866" expanded="true" signature="5987:6104" ph="..." />
+                <marker date="1558999844866" expanded="true" signature="10216:10221" ph="..." />
+                <marker date="1558999844866" expanded="true" signature="10418:10544" ph="..." />
+                <marker date="1558999844866" expanded="true" signature="10625:10708" ph="..." />
               </folding>
             </state>
           </provider>
@@ -167,6 +168,7 @@
       <find>decryptAndVerifyIntegrity</find>
       <find>buildConnectionClosed</find>
       <find>persistence</find>
+      <find>local_file</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -179,9 +181,9 @@
         <option value="$PROJECT_DIR$/TcpRemoteFileStorage/clientFile.py" />
         <option value="$PROJECT_DIR$/TcpRemoteFileStorage/originalcryptoutil.py" />
         <option value="$PROJECT_DIR$/protocolConstants.py" />
-        <option value="$PROJECT_DIR$/cryptoutil.py" />
-        <option value="$PROJECT_DIR$/serverFile.py" />
         <option value="$PROJECT_DIR$/clientFile.py" />
+        <option value="$PROJECT_DIR$/serverFile.py" />
+        <option value="$PROJECT_DIR$/cryptoutil.py" />
       </list>
     </option>
   </component>
@@ -231,7 +233,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.clientFile">
+  <component name="RunManager" selected="Python.cryptoutil (1)">
     <configuration name="clientFile" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="tcpClientServer" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -324,9 +326,9 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.cryptoutil (1)" />
         <item itemvalue="Python.clientFile" />
         <item itemvalue="Python.serverFile" />
-        <item itemvalue="Python.cryptoutil (1)" />
         <item itemvalue="Python.cryptoutil" />
       </list>
     </recent_temporary>
@@ -357,13 +359,13 @@
     <frame x="106" y="0" width="1472" height="822" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.8240964" visible="true" weight="0.22857143" />
-      <window_info id="Structure" order="1" sideWeight="0.17590362" side_tool="true" visible="true" weight="0.22857143" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.82590234" visible="true" weight="0.22857143" />
+      <window_info id="Structure" order="1" sideWeight="0.17409766" side_tool="true" visible="true" weight="0.22857143" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3164006" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.39767778" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3164006" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39767778" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32848838" />
@@ -394,13 +396,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/serverFile.py</url>
-          <line>360</line>
+          <line>365</line>
           <option name="timeStamp" value="37" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/clientFile.py</url>
-          <line>225</line>
-          <option name="timeStamp" value="40" />
+          <line>232</line>
+          <option name="timeStamp" value="42" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -475,26 +477,6 @@
     <entry file="file://$PROJECT_DIR$/../clientFile.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/cryptoutil.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="38" column="18" selection-start-line="38" selection-start-column="8" selection-end-line="38" selection-end-column="18" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-            <marker date="1558989152699" expanded="true" signature="2151:2156" ph="..." />
-            <marker date="1558989152699" expanded="true" signature="2355:2396" ph="..." />
-            <marker date="1558989152699" expanded="true" signature="4359:4364" ph="..." />
-            <marker date="1558989152699" expanded="true" signature="4664:4855" ph="..." />
-            <marker date="1558989152699" expanded="true" signature="7555:8240" ph="..." />
-            <marker date="1558989152699" expanded="true" signature="8456:8884" ph="..." />
-            <marker date="1558989152699" expanded="true" signature="9369:10058" ph="..." />
-            <marker date="1558989152699" expanded="true" signature="10070:10075" ph="..." />
-            <marker date="1558989152699" expanded="true" signature="10155:10332" ph="..." />
-            <marker date="1558989152699" expanded="true" signature="11284:11285" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/protocolConstants.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
@@ -502,27 +484,47 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/serverFile.py">
+    <entry file="file://$PROJECT_DIR$/clientFile.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="112">
-          <caret line="360" selection-start-line="360" selection-end-line="360" />
+        <state relative-caret-position="163">
+          <caret line="209" column="22" selection-start-line="209" selection-start-column="22" selection-end-line="209" selection-end-column="22" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
-            <marker date="1558997154253" expanded="true" signature="5987:6104" ph="..." />
-            <marker date="1558997154253" expanded="true" signature="10216:10221" ph="..." />
-            <marker date="1558997154253" expanded="true" signature="10418:10544" ph="..." />
-            <marker date="1558997154253" expanded="true" signature="10625:10708" ph="..." />
+            <marker date="1558999509487" expanded="true" signature="11756:11759" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/clientFile.py">
+    <entry file="file://$PROJECT_DIR$/serverFile.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="225" column="38" selection-start-line="225" selection-start-column="38" selection-end-line="225" selection-end-column="38" />
+        <state relative-caret-position="-618">
+          <caret line="369" column="25" lean-forward="true" selection-start-line="369" selection-start-column="25" selection-end-line="369" selection-end-column="25" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
-            <marker date="1558998329275" expanded="true" signature="11421:11424" ph="..." />
+            <marker date="1558999844866" expanded="true" signature="5987:6104" ph="..." />
+            <marker date="1558999844866" expanded="true" signature="10216:10221" ph="..." />
+            <marker date="1558999844866" expanded="true" signature="10418:10544" ph="..." />
+            <marker date="1558999844866" expanded="true" signature="10625:10708" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cryptoutil.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="219">
+          <caret line="335" column="5" lean-forward="true" selection-start-line="335" selection-start-column="5" selection-end-line="335" selection-end-column="5" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+            <marker date="1559000033506" expanded="true" signature="2151:2156" ph="..." />
+            <marker date="1559000033506" expanded="true" signature="2355:2396" ph="..." />
+            <marker date="1559000033506" expanded="true" signature="4359:4364" ph="..." />
+            <marker date="1559000033506" expanded="true" signature="4664:4855" ph="..." />
+            <marker date="1559000033506" expanded="true" signature="7555:8240" ph="..." />
+            <marker date="1559000033506" expanded="true" signature="8456:8884" ph="..." />
+            <marker date="1559000033506" expanded="true" signature="9369:10055" ph="..." />
+            <marker date="1559000033506" expanded="true" signature="10067:10072" ph="..." />
+            <marker date="1559000033506" expanded="true" signature="10152:10332" ph="..." />
+            <marker date="1559000033506" expanded="true" signature="11291:11292" ph="..." />
           </folding>
         </state>
       </provider>

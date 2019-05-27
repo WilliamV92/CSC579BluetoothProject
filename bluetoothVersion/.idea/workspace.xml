@@ -4,6 +4,7 @@
     <list default="true" id="ccc6faeb-f207-4613-9f84-b029fbc882dd" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../tcpClientServer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tcpClientServer/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tcpClientServer/clientFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tcpClientServer/clientFile.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tcpClientServer/cryptoutil.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tcpClientServer/cryptoutil.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tcpClientServer/serverFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tcpClientServer/serverFile.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
