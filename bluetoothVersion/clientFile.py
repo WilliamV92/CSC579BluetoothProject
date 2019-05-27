@@ -40,6 +40,9 @@ def performHandshake(s):
             message, session_key = buildKeyExchange(rsa_key_pair, server_public_key)
             log("SENDING {}".format(message))
             s.send(message)
+        else:
+            log("Handshake Failed.")
+            return False, None
     else:
         log("Handshake Failed.")
         return False, None

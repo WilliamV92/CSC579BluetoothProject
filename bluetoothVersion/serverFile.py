@@ -31,6 +31,9 @@ def performHandshake(conn):
             message, rsa_key_pair = buildServerHello()
             log("SENDING {}".format(message))
             conn.send(message)
+        else:
+            log("Handshake Failed.")
+            return False, None
     else:
         log("Handshake Failed.")
         return False, None
@@ -44,6 +47,9 @@ def performHandshake(conn):
             message = buildServerSessionBegin(session_key)
             log("SENDING {}".format(message))
             conn.send(message)
+        else:
+            log("Handshake Failed.")
+            return False, None
     else:
         log("Handshake Failed.")
         return False, None
