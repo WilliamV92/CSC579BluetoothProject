@@ -115,6 +115,14 @@ def verifyIntegrity(data):
     is_valid = True if digest == recalculated_digest else False
     return is_valid
 
+def generatePersistenceKeyFromPassword(password):
+    # take SHA-1 hash of password - 160 bit digest
+    sha_hash = SHA.new()
+    sha_hash.update(b'Hello')
+    initial_digest = sha_hash.digest()
+    # take sha-256 hash of initial digest
+    return sha256Hash(initial_digest)
+
 '''
 Complex utility methods that combine encryption and data integrity operations
 '''
@@ -178,6 +186,29 @@ def rsa_decrypt(rsa_key, ciphertext):
 
 '''
 def main():
+
+    # this sample works for reading a file, encrypting an image file, saving an encrypted file, reading it back in,
+    # decrypting the data, then saving the file under a new name.
+    user_password = "userpassword"
+    persistence_key = generatePersistenceKeyFromPassword(user_password)
+    iv = generateAesIv()
+
+    file_to_send = open("car.png", 'rb')
+    file_data = file_to_send.read()
+    file_cipher = encryptAndHash(persistence_key, iv, file_data)
+
+    cipher_file = open("cipherFile", 'wb')
+    cipher_file.write(file_cipher)
+    cipher_file.close()
+
+    read_cipher_file = open("cipherFile", 'rb')
+    encrypted_file_data = read_cipher_file.read()
+    cipher_file.close()
+
+    decrypted_file = decryptAndVerifyIntegrity(persistence_key, encrypted_file_data)
+    local_file = open("carTest.png", 'wb')
+    local_file.write(decrypted_file)
+    local_file.close()
 
 # Test code for RSA public key functions
     rsa_key_pair = generateRsaPublicKeyPair()
