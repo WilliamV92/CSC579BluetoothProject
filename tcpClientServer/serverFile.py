@@ -386,8 +386,22 @@ def handleFileDownload(s, client_secure_session_keys):
         print("Sending file size")
         sendEncrypted(s, client_secure_session_keys.session_key, fileSizeBytes)
         returnFileSize = decryptAndVerifyIntegrity(client_secure_session_keys.session_key, s.recv(1024))
-        if returnFileSize == fileSizeBytes:
-            s.send(encrypted_message_data)
+        if (returnFileSize == fileSizeBytes):
+            print("Proceed with Upload")
+            bytes_sent = 0
+            encrypted_data_size = len(encrypted_message_data)
+            while (bytes_sent < encrypted_data_size):
+                chunk_size = 1024
+                if chunk_size > len(encrypted_message_data):
+                    chunk_size = len(encrypted_message_data)
+                next_chunk = encrypted_message_data[0:chunk_size]
+                bytes_sent = bytes_sent + len(next_chunk)
+                trim_size = 1024
+                if len(encrypted_message_data) < 1024:
+                    trim_size = len(encrypted_message_data)
+                encrypted_message_data = encrypted_message_data[trim_size:]
+                s.send(next_chunk)
+            print(bytes_sent)
     else:
         print("File not found")
 

@@ -253,7 +253,16 @@ def fileDownload(s, session_key):
     local_file = open(filename, 'wb')
     sendEncrypted(s, session_key, fileSizeData)
     print("Waiting for file")
-    data = decryptAndVerifyIntegrity(session_key, s.recv(fileSize))
+    bytes_read = 0
+    encrypted_data = b""
+    while (bytes_read < fileSize):
+        next_chunk = s.recv(1024)
+        print(len(next_chunk))
+        bytes_read = bytes_read + len(next_chunk)
+        print(bytes_read)
+        encrypted_data = encrypted_data + next_chunk
+    print(len(encrypted_data))
+    data = decryptAndVerifyIntegrity(session_key, encrypted_data)
     local_file.write(data)
     local_file.close()
 
