@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ccc6faeb-f207-4613-9f84-b029fbc882dd" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/clientFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/clientFile.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/serverFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/serverFile.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tcpClientServer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tcpClientServer/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tcpClientServer/clientFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tcpClientServer/clientFile.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tcpClientServer/serverFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tcpClientServer/serverFile.py" afterDir="false" />
@@ -97,7 +95,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="1">
     <option name="x" value="48" />
     <option name="y" value="98" />
     <option name="width" value="1670" />
@@ -229,7 +227,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="39" y="79" width="1336" height="763" extended-state="0" />
+    <frame x="39" y="79" width="1336" height="763" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27559662" />

@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="441176a2-9e52-496b-b9b7-8b05f1ba9de7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../bluetoothVersion/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../bluetoothVersion/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bluetoothVersion/clientFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/../bluetoothVersion/clientFile.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bluetoothVersion/serverFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/../bluetoothVersion/serverFile.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/clientFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/clientFile.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/serverFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/serverFile.py" afterDir="false" />
     </list>
@@ -83,12 +81,12 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="7517" />
+          <entry key="py" value="7595" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="7517" />
+          <entry key="Python" value="7595" />
         </counts>
       </usages-collector>
     </session>
@@ -98,8 +96,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cryptoutil.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1537">
-              <caret line="251" column="23" selection-start-line="251" selection-start-column="23" selection-end-line="251" selection-end-column="77" />
+            <state relative-caret-position="476">
+              <caret line="38" column="18" selection-start-line="38" selection-start-column="8" selection-end-line="38" selection-end-column="18" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
                 <marker date="1558989152699" expanded="true" signature="2151:2156" ph="..." />
@@ -120,11 +118,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/clientFile.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="113">
-              <caret line="110" selection-start-line="110" selection-end-line="129" selection-end-column="40" />
+            <state relative-caret-position="197">
+              <caret line="225" column="38" selection-start-line="225" selection-start-column="38" selection-end-line="225" selection-end-column="38" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
-                <marker date="1558990386339" expanded="true" signature="7940:7942" ph="..." />
+                <marker date="1558998329275" expanded="true" signature="11421:11424" ph="..." />
               </folding>
             </state>
           </provider>
@@ -133,14 +131,14 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/serverFile.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="571">
-              <caret line="226" lean-forward="true" selection-start-line="196" selection-end-line="226" />
+            <state relative-caret-position="112">
+              <caret line="360" selection-start-line="360" selection-end-line="360" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
-                <marker date="1558990440053" expanded="true" signature="5987:6104" ph="..." />
-                <marker date="1558990440053" expanded="true" signature="10216:10221" ph="..." />
-                <marker date="1558990440053" expanded="true" signature="10418:10544" ph="..." />
-                <marker date="1558990440053" expanded="true" signature="10625:10708" ph="..." />
+                <marker date="1558997154253" expanded="true" signature="5987:6104" ph="..." />
+                <marker date="1558997154253" expanded="true" signature="10216:10221" ph="..." />
+                <marker date="1558997154253" expanded="true" signature="10418:10544" ph="..." />
+                <marker date="1558997154253" expanded="true" signature="10625:10708" ph="..." />
               </folding>
             </state>
           </provider>
@@ -182,14 +180,13 @@
         <option value="$PROJECT_DIR$/TcpRemoteFileStorage/originalcryptoutil.py" />
         <option value="$PROJECT_DIR$/protocolConstants.py" />
         <option value="$PROJECT_DIR$/cryptoutil.py" />
-        <option value="$PROJECT_DIR$/clientFile.py" />
         <option value="$PROJECT_DIR$/serverFile.py" />
+        <option value="$PROJECT_DIR$/clientFile.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="63" />
-    <option name="y" value="6" />
+    <option name="x" value="132" />
     <option name="width" value="1840" />
     <option name="height" value="1028" />
   </component>
@@ -357,16 +354,16 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="51" y="5" width="1472" height="822" extended-state="0" />
+    <frame x="106" y="0" width="1472" height="822" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.8258346" visible="true" weight="0.22857143" />
-      <window_info id="Structure" order="1" sideWeight="0.17416546" side_tool="true" visible="true" weight="0.22857143" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.8240964" visible="true" weight="0.22857143" />
+      <window_info id="Structure" order="1" sideWeight="0.17590362" side_tool="true" visible="true" weight="0.22857143" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.31686047" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39767778" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3164006" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.39767778" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32848838" />
@@ -386,16 +383,6 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/clientFile.py</url>
-          <line>111</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/serverFile.py</url>
-          <line>244</line>
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/cryptoutil.py</url>
           <line>24</line>
           <option name="timeStamp" value="20" />
@@ -407,8 +394,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/serverFile.py</url>
-          <line>204</line>
-          <option name="timeStamp" value="36" />
+          <line>360</line>
+          <option name="timeStamp" value="37" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/clientFile.py</url>
+          <line>225</line>
+          <option name="timeStamp" value="40" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -422,6 +414,11 @@
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
+      <expression>
+        <expression-string>len(encrypted_message_data)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>USER_DATABASE[username]</expression-string>
         <language-id>Python</language-id>
@@ -462,11 +459,6 @@
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
-      <expression>
-        <expression-string>len(second_segment)</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
     </expressions>
   </component>
   <component name="editorHistoryManager">
@@ -483,17 +475,10 @@
     <entry file="file://$PROJECT_DIR$/../clientFile.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/protocolConstants.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="20" selection-start-line="13" selection-start-column="20" selection-end-line="13" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cryptoutil.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1537">
-          <caret line="251" column="23" selection-start-line="251" selection-start-column="23" selection-end-line="251" selection-end-column="77" />
+        <state relative-caret-position="476">
+          <caret line="38" column="18" selection-start-line="38" selection-start-column="8" selection-end-line="38" selection-end-column="18" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
             <marker date="1558989152699" expanded="true" signature="2151:2156" ph="..." />
@@ -510,27 +495,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/protocolConstants.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="13" column="20" selection-start-line="13" selection-start-column="20" selection-end-line="13" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/serverFile.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="571">
-          <caret line="226" lean-forward="true" selection-start-line="196" selection-end-line="226" />
+        <state relative-caret-position="112">
+          <caret line="360" selection-start-line="360" selection-end-line="360" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
-            <marker date="1558990440053" expanded="true" signature="5987:6104" ph="..." />
-            <marker date="1558990440053" expanded="true" signature="10216:10221" ph="..." />
-            <marker date="1558990440053" expanded="true" signature="10418:10544" ph="..." />
-            <marker date="1558990440053" expanded="true" signature="10625:10708" ph="..." />
+            <marker date="1558997154253" expanded="true" signature="5987:6104" ph="..." />
+            <marker date="1558997154253" expanded="true" signature="10216:10221" ph="..." />
+            <marker date="1558997154253" expanded="true" signature="10418:10544" ph="..." />
+            <marker date="1558997154253" expanded="true" signature="10625:10708" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/clientFile.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="113">
-          <caret line="110" selection-start-line="110" selection-end-line="129" selection-end-column="40" />
+        <state relative-caret-position="197">
+          <caret line="225" column="38" selection-start-line="225" selection-start-column="38" selection-end-line="225" selection-end-column="38" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
-            <marker date="1558990386339" expanded="true" signature="7940:7942" ph="..." />
+            <marker date="1558998329275" expanded="true" signature="11421:11424" ph="..." />
           </folding>
         </state>
       </provider>

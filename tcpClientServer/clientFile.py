@@ -208,34 +208,52 @@ def fileUpload(s, session_key):
     while my_file.is_file() is False:
         filename = input("Please enter a valid file name\n").strip()
         my_file = Path(filename)
-    fileSize = os.path.getsize(filename)
-    fileSizeBytes = bytes([fileSize])
+    file_to_send = open(filename, 'rb')
+    file_data = file_to_send.read()
+    iv = generateAesIv()
+    encrypted_message_data = encryptAndHash(session_key, iv, file_data)
+    fileSizeString = str(len(encrypted_message_data))
     print("Sending file size")
-    s.send(fileSizeBytes)
-    sizeConfirm = s.recv(1024)
-    sizeNumber = int.from_bytes(sizeConfirm, "little")
-    if(sizeNumber == fileSize):
+    print(fileSizeString)
+    sendEncrypted(s, session_key, fileSizeString.encode())
+    sizeConfirm = decryptAndVerifyIntegrity(session_key, s.recv(1024))
+    sizeConfirmString = sizeConfirm.decode('utf-8')
+    if(sizeConfirmString == fileSizeString):
         print("Proceed with Upload")
-        file_to_send = open(filename, 'rb')
-        file_data = file_to_send.read()
-        s.send(file_data)
+        bytes_sent = 0
+        encrypted_data = b""
+        encrypted_data_size = len(encrypted_message_data)
+        while(bytes_sent < encrypted_data_size):
+            chunk_size = 1024
+            if chunk_size > len(encrypted_message_data):
+                chunk_size = len(encrypted_message_data)
+            next_chunk = encrypted_message_data[0:chunk_size]
+            bytes_sent = bytes_sent + len(next_chunk)
+            trim_size = 1024
+            if len(encrypted_message_data) < 1024:
+                trim_size = len(encrypted_message_data)
+            encrypted_message_data = encrypted_message_data[trim_size:]
+            s.send(next_chunk)
+        print(bytes_sent)
     else:
         print("Sizes do not match")
-        s.send("END".encode())
+        sendEncrypted(s, session_key, "END".encode())
 
 # method for performing file download
 def fileDownload(s, session_key):
     log("Handling File Download")
     filename = input("Enter the full name of the file you wish to download\n").strip()
     print("Sending requested file name")
-    s.send(filename.encode())
+    sendEncrypted(s, session_key, filename.encode())
     print("Waiting for file size")
-    fileSizeData = s.recv(1024)
+    fileSizeData = decryptAndVerifyIntegrity(session_key, s.recv(1024))
     fileSize = int.from_bytes(fileSizeData, "little")
-    local_file = open("testing.txt", 'wb')
-    s.send(fileSizeData)
+    print("File Size")
+    print(fileSize)
+    local_file = open(filename, 'wb')
+    sendEncrypted(s, session_key, fileSizeData)
     print("Waiting for file")
-    data = s.recv(fileSize)
+    data = decryptAndVerifyIntegrity(session_key, s.recv(fileSize))
     local_file.write(data)
     local_file.close()
 
@@ -244,18 +262,75 @@ def handleSecureSession(s, session_key):
     log("Secure session established...")
     # for now, let's just transfer a file as a test
     command = input("Enter a command or 'bye' to exit the program\n")
-    s.send(command.strip().upper().encode())
-    serverCommand = s.recv(1024)
+    sendEncrypted(s, session_key, command.strip().upper().encode())
+    serverCommand = decryptAndVerifyIntegrity(session_key, s.recv(1024))
     serverStringCommand = serverCommand.decode('utf-8')
     while serverStringCommand.strip().upper() != "BYE":
         if command.strip().upper() == FILE_UPLOAD_CMD:
-            fileUpload(s)
+            fileUpload(s, session_key)
         elif command.strip().upper() == FILE_RETRIEVE_CMD:
-            fileDownload(s)
+            fileDownload(s, session_key)
         command = input("Enter a command or 'bye' to exit the program\n")
-        s.send(command.strip().upper().encode())
-        serverCommand = s.recv(1024)
+        sendEncrypted(s, session_key, command.strip().upper().encode())
+        serverCommand = decryptAndVerifyIntegrity(session_key, s.recv(1024))
         serverStringCommand = serverCommand.decode('utf-8')
+
+# # method for performing a file upload
+# def fileUpload(s, session_key):
+#     log("Performing file upload")
+#     filename = input("Enter the full name of a file in this directory\n").strip()
+#     my_file = Path(filename)
+#     while my_file.is_file() is False:
+#         filename = input("Please enter a valid file name\n").strip()
+#         my_file = Path(filename)
+#     fileSize = os.path.getsize(filename)
+#     fileSizeBytes = bytes([fileSize])
+#     print("Sending file size")
+#     s.send(fileSizeBytes)
+#     sizeConfirm = s.recv(1024)
+#     sizeNumber = int.from_bytes(sizeConfirm, "little")
+#     if(sizeNumber == fileSize):
+#         print("Proceed with Upload")
+#         file_to_send = open(filename, 'rb')
+#         file_data = file_to_send.read()
+#         s.send(file_data)
+#     else:
+#         print("Sizes do not match")
+#         s.send("END".encode())
+#
+# # method for performing file download
+# def fileDownload(s, session_key):
+#     log("Handling File Download")
+#     filename = input("Enter the full name of the file you wish to download\n").strip()
+#     print("Sending requested file name")
+#     s.send(filename.encode())
+#     print("Waiting for file size")
+#     fileSizeData = s.recv(1024)
+#     fileSize = int.from_bytes(fileSizeData, "little")
+#     local_file = open("testing.txt", 'wb')
+#     s.send(fileSizeData)
+#     print("Waiting for file")
+#     data = s.recv(fileSize)
+#     local_file.write(data)
+#     local_file.close()
+#
+# # after succesful handshake, the secure session with a server is handled by this method
+# def handleSecureSession(s, session_key):
+#     log("Secure session established...")
+#     # for now, let's just transfer a file as a test
+#     command = input("Enter a command or 'bye' to exit the program\n")
+#     s.send(command.strip().upper().encode())
+#     serverCommand = s.recv(1024)
+#     serverStringCommand = serverCommand.decode('utf-8')
+#     while serverStringCommand.strip().upper() != "BYE":
+#         if command.strip().upper() == FILE_UPLOAD_CMD:
+#             fileUpload(s, session_key)
+#         elif command.strip().upper() == FILE_RETRIEVE_CMD:
+#             fileDownload(s, session_key)
+#         command = input("Enter a command or 'bye' to exit the program\n")
+#         s.send(command.strip().upper().encode())
+#         serverCommand = s.recv(1024)
+#         serverStringCommand = serverCommand.decode('utf-8')
 
 # main to establish connection to remote peer and initiate secure session
 def main():
