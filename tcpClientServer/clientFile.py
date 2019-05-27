@@ -215,6 +215,12 @@ def fileUpload(s):
         print("Sizes do not match")
         s.send("END".encode())
 
+# helper method for sending encrypted data with a given key
+def sendEncrypted(sock, session_key, message_data):
+    iv = generateAesIv()
+    encrypted_message_data = encryptAndHash(session_key, iv, message_data)
+    sock.send(encrypted_message_data)
+
 # method for performing file download
 def fileDownload(s):
     log("Handling File Download")

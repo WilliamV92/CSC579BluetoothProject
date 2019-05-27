@@ -225,6 +225,12 @@ def validateClientAuth(data, session_key):
                 isValid = True
     return isValid
 
+# helper method for sending encrypted data with a given key
+def sendEncrypted(sock, session_key, message_data):
+    iv = generateAesIv()
+    encrypted_message_data = encryptAndHash(session_key, iv, message_data)
+    sock.send(encrypted_message_data)
+
 # method for handling a file upload
 def handleFileUpload(sock):
     log("Handling File Upload")

@@ -191,6 +191,12 @@ def validateServerAuthReply(session_key, data):
         reply = SERVER_AUTH_REPLY_TERMINATE
     return reply
 
+# helper method for sending encrypted data with a given key
+def sendEncrypted(sock, session_key, message_data):
+    iv = generateAesIv()
+    encrypted_message_data = encryptAndHash(session_key, iv, message_data)
+    sock.send(encrypted_message_data)
+
 # method for performing a file upload
 def fileUpload(s):
     log("Performing file upload")
