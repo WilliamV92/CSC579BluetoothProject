@@ -366,6 +366,7 @@ def handleFileDownload(s, client_secure_session_keys):
             else:
                 print("Download Failed")
     else:
+        sendEncrypted(s, client_secure_session_keys.session_key, FNF_COMMAND.encode())
         print("File not found")
 
 # after succesful handshake, the client's secure session is handled by this method
@@ -382,6 +383,8 @@ def handleSecureSession(sock, client_secure_session_keys):
         elif stringData.strip().upper() == FILE_RETRIEVE_CMD:
             sendEncrypted(sock, client_secure_session_keys.session_key, FILE_RETRIEVE_CMD.encode())
             handleFileDownload(sock, client_secure_session_keys)
+        else:
+            sendEncrypted(sock, client_secure_session_keys.session_key, INVALID_COMMAND.encode())
         print("Awaiting New Command")
         command = decryptAndVerifyIntegrity(client_secure_session_keys.session_key, sock.recv(1024))
         stringData = command.decode('utf-8')

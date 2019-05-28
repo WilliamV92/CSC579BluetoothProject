@@ -261,26 +261,29 @@ def fileDownload(s, session_key):
     print("Waiting for file size")
     fileSizeData = decryptAndVerifyIntegrity(session_key, s.recv(1024))
     fileSizeString = fileSizeData.decode('utf-8')
-    fileSizeInt = int(fileSizeString)
-    print("File Size")
-    print(fileSizeString)
-    local_file = open(filename, 'wb')
-    sendEncrypted(s, session_key, fileSizeData)
-    print("Waiting for file")
-    bytes_read = 0
-    encrypted_data = b""
-    while (bytes_read < fileSizeInt):
-        next_chunk = s.recv(1024)
-        print(len(next_chunk))
-        bytes_read = bytes_read + len(next_chunk)
-        print(bytes_read)
-        encrypted_data = encrypted_data + next_chunk
-    print(len(encrypted_data))
-    data = decryptAndVerifyIntegrity(session_key, encrypted_data)
-    local_file.write(data)
-    local_file.close()
-    print("Send download confirmation to server")
-    sendEncrypted(s, session_key, "SUCCESS".encode())
+    if(fileSizeString is not FNF_COMMAND):
+        fileSizeInt = int(fileSizeString)
+        print("File Size")
+        print(fileSizeString)
+        local_file = open(filename, 'wb')
+        sendEncrypted(s, session_key, fileSizeData)
+        print("Waiting for file")
+        bytes_read = 0
+        encrypted_data = b""
+        while (bytes_read < fileSizeInt):
+            next_chunk = s.recv(1024)
+            print(len(next_chunk))
+            bytes_read = bytes_read + len(next_chunk)
+            print(bytes_read)
+            encrypted_data = encrypted_data + next_chunk
+        print(len(encrypted_data))
+        data = decryptAndVerifyIntegrity(session_key, encrypted_data)
+        local_file.write(data)
+        local_file.close()
+        print("Send download confirmation to server")
+        sendEncrypted(s, session_key, "SUCCESS".encode())
+    else:
+        print("File Not Found On Server")
 
 # after succesful handshake, the secure session with a server is handled by this method
 def handleSecureSession(s, session_key):
@@ -291,10 +294,12 @@ def handleSecureSession(s, session_key):
     serverCommand = decryptAndVerifyIntegrity(session_key, s.recv(1024))
     serverStringCommand = serverCommand.decode('utf-8')
     while serverStringCommand.strip().upper() != "BYE":
-        if command.strip().upper() == FILE_UPLOAD_CMD:
+        if serverStringCommand.strip().upper() == FILE_UPLOAD_CMD:
             fileUpload(s, session_key)
-        elif command.strip().upper() == FILE_RETRIEVE_CMD:
+        elif serverStringCommand.strip().upper() == FILE_RETRIEVE_CMD:
             fileDownload(s, session_key)
+        else:
+            print(serverStringCommand)
         command = input("Enter a command or 'bye' to exit the program\n")
         sendEncrypted(s, session_key, command.strip().upper().encode())
         serverCommand = decryptAndVerifyIntegrity(session_key, s.recv(1024))
