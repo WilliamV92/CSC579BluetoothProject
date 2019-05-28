@@ -254,7 +254,7 @@ def validateClientAuth(data, session_key):
                     isValid = True
                     persistence_key = generatePersistenceKeyFromPassword(password)
                     masked_user_directory = generateMaskedText(username.encode(), persistence_key)
-        return isValid, persistence_key, masked_user_directory
+    return isValid, persistence_key, masked_user_directory
 
 def authenticate_user(username, hashed_password):
     valid_user = False
@@ -263,7 +263,6 @@ def authenticate_user(username, hashed_password):
         # compare hashed password user provided in client auth message with stored hashed password
         valid_user = True if hashed_password == USER_DATABASE[username] else False
     return valid_user
-
 
 '''
 Helper methods for storing and retrieving encrypted files
@@ -279,13 +278,11 @@ def storeFileEncrypted(plaintext_filename, plaintext_file_data, persistence_key)
     masked_filename = generateMaskedFileName(plaintext_filename, persistence_key)
     writeEncryptedFile(masked_filename, plaintext_file_data, persistence_key)
 
-# given plaintext filename, find file with masked name, read in encrypted file,
-#  decrypt with user's persitence key and return plaintext file data
-def retrieveEncryptedFile(plaintext_filename, persistence_key):
-    masked_filename = generateMaskedFileName(plaintext_filename, persistence_key)
-    decrypted_file_data = getEncryptedFileData(masked_filename, persistence_key)
+# given masked filename, find file with masked name, read in encrypted file,
+#  decrypt with user's persistence key and return plaintext file data
+def retrieveEncryptedFile(masked_file_name, persistence_key):
+    decrypted_file_data = getEncryptedFileData(masked_file_name, persistence_key)
     return decrypted_file_data
-
 
 # helper method for sending encrypted data with a given key
 def sendEncrypted(sock, session_key, message_data):
@@ -294,58 +291,90 @@ def sendEncrypted(sock, session_key, message_data):
     sock.send(encrypted_message_data)
 
 # method for handling a file upload
-def handleFileUpload(sock):
+def handleFileUpload(sock, client_secure_session_keys):
     log("Handling File Upload")
+    print("Waiting for file name")
+    filename_bytes = decryptAndVerifyIntegrity(client_secure_session_keys.session_key, sock.recv(1024))
+    filename = filename_bytes.decode('utf-8')
+    print("Filename")
+    print(filename)
+    sendEncrypted(sock, client_secure_session_keys.session_key, filename.encode())
     print("Waiting for file size")
-    fileSizeData = sock.recv(1024)
-    fileSize = int.from_bytes(fileSizeData, "little")
-    sock.send(fileSizeData)
-    local_file = open('transferTestFile.txt', 'wb')
-    data = sock.recv(fileSize)
-    local_file.write(data)
-    local_file.close()
+    fileSizeData = decryptAndVerifyIntegrity(client_secure_session_keys.session_key, sock.recv(1024))
+    fileSizeString = fileSizeData.decode('utf-8')
+    fileSizeInt = int(fileSizeString)
+    print("File size")
+    print(fileSizeInt)
+    sendEncrypted(sock, client_secure_session_keys.session_key, fileSizeString.encode())
+    bytes_read = 0
+    encrypted_data = b""
+    while(bytes_read < fileSizeInt):
+        next_chunk = sock.recv(1024)
+        print(len(next_chunk))
+        bytes_read = bytes_read + len(next_chunk)
+        print(bytes_read)
+        encrypted_data = encrypted_data + next_chunk
+    print(len(encrypted_data))
+    data = decryptAndVerifyIntegrity(client_secure_session_keys.session_key, encrypted_data)
+    storeFileEncrypted(filename, data, client_secure_session_keys.persistence_keys)
 
 # method for handling a file download
-def handleFileDownload(s):
+def handleFileDownload(s, client_secure_session_keys):
     print("Waiting for requested file name")
-    requestedFileName = s.recv(1024)
+    requestedFileName = decryptAndVerifyIntegrity(client_secure_session_keys.session_key, s.recv(1024))
     fileNameString = requestedFileName.decode('utf-8')
     print(fileNameString)
-    my_file = Path(fileNameString)
+    masked_file_name = generateMaskedFileName(fileNameString, client_secure_session_keys.persistence_keys)
+    my_file = Path(masked_file_name)
     if my_file.is_file() is True:
         print("File found")
-        fileSize = os.path.getsize(fileNameString)
-        fileSizeBytes = bytes([fileSize])
+        file_data = retrieveEncryptedFile(masked_file_name, client_secure_session_keys.persistence_keys)
+        iv = generateAesIv()
+        encrypted_message_data = encryptAndHash(client_secure_session_keys.session_key, iv, file_data)
+        fileSizeString = str(len(encrypted_message_data))
         print("Sending file size")
-        s.send(fileSizeBytes)
-        returnFileSize = s.recv(1024)
-        if returnFileSize == fileSizeBytes:
-            file_to_send = open(fileNameString, 'rb')
-            file_data = file_to_send.read()
-            s.send(file_data)
+        sendEncrypted(s, client_secure_session_keys.session_key, fileSizeString.encode())
+        returnFileSize = decryptAndVerifyIntegrity(client_secure_session_keys.session_key, s.recv(1024))
+        returnFileSizeString = returnFileSize.decode('utf-8')
+        if (returnFileSizeString == fileSizeString):
+            print("Proceed with Upload")
+            bytes_sent = 0
+            encrypted_data_size = len(encrypted_message_data)
+            while (bytes_sent < encrypted_data_size):
+                chunk_size = 1024
+                if chunk_size > len(encrypted_message_data):
+                    chunk_size = len(encrypted_message_data)
+                next_chunk = encrypted_message_data[0:chunk_size]
+                bytes_sent = bytes_sent + len(next_chunk)
+                trim_size = 1024
+                if len(encrypted_message_data) < 1024:
+                    trim_size = len(encrypted_message_data)
+                encrypted_message_data = encrypted_message_data[trim_size:]
+                s.send(next_chunk)
+            print(bytes_sent)
     else:
         print("File not found")
 
 # after succesful handshake, the client's secure session is handled by this method
-def handleSecureSession(sock):
+def handleSecureSession(sock, client_secure_session_keys):
     log("Secure session established...")
-    command = sock.recv(1024)
+    command = decryptAndVerifyIntegrity(client_secure_session_keys.session_key, sock.recv(1024))
     stringData = command.decode('utf-8')
     print("Waiting for first command")
     while stringData.strip().upper() != EXIT_COMMAND:
         print("In command loop")
         if stringData.strip().upper() == FILE_UPLOAD_CMD:
-            sock.send(FILE_UPLOAD_CMD.encode())
-            handleFileUpload(sock)
+            sendEncrypted(sock, client_secure_session_keys.session_key, FILE_UPLOAD_CMD.encode())
+            handleFileUpload(sock, client_secure_session_keys)
         elif stringData.strip().upper() == FILE_RETRIEVE_CMD:
-            sock.send(FILE_RETRIEVE_CMD.encode())
-            handleFileDownload(sock)
+            sendEncrypted(sock, client_secure_session_keys.session_key, FILE_RETRIEVE_CMD.encode())
+            handleFileDownload(sock, client_secure_session_keys)
         print("Awaiting New Command")
-        command = sock.recv(1024)
+        command = decryptAndVerifyIntegrity(client_secure_session_keys.session_key, sock.recv(1024))
         stringData = command.decode('utf-8')
     # for now, let's just transfer a file as a test
     # handleFileUpload(sock)
-    sock.send(EXIT_COMMAND.encode())
+    sendEncrypted(sock, client_secure_session_keys.session_key, EXIT_COMMAND.encode())
 
 def initializeUsersDatabase():
     log("Initializing users database.")
@@ -376,7 +405,7 @@ def main():
         log("Accepted connection from {}.".format(addr))
         handshake_successful, client_secure_session_keys = performHandshake(conn)
         if handshake_successful and client_secure_session_keys is not None:
-            handleSecureSession(conn)
+            handleSecureSession(conn, client_secure_session_keys)
         else:
             log("Handshake failed. Terminating conneciton")
         log("Secure session ended. Closing connection.")

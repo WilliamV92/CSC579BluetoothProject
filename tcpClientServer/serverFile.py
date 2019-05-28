@@ -289,61 +289,6 @@ def sendEncrypted(sock, session_key, message_data):
     encrypted_message_data = encryptAndHash(session_key, iv, message_data)
     sock.send(encrypted_message_data)
 
-# # method for handling a file upload
-# def handleFileUpload(sock, client_secure_session_keys):
-#     log("Handling File Upload")
-#     print("Waiting for file size")
-#     fileSizeData = sock.recv(1024)
-#     fileSize = int.from_bytes(fileSizeData, "little")
-#     sock.send(fileSizeData)
-#     local_file = open('transferTestFile.png', 'wb')
-#     data = sock.recv(fileSize)
-#     local_file.write(data)
-#     local_file.close()
-#
-# # method for handling a file download
-# def handleFileDownload(s, client_secure_session_keys):
-#     print("Waiting for requested file name")
-#     requestedFileName = s.recv(1024)
-#     fileNameString = requestedFileName.decode('utf-8')
-#     print(fileNameString)
-#     my_file = Path(fileNameString)
-#     if my_file.is_file() is True:
-#         print("File found")
-#         fileSize = os.path.getsize(fileNameString)
-#         fileSizeBytes = bytes([fileSize])
-#         print("Sending file size")
-#         s.send(fileSizeBytes)
-#         returnFileSize = s.recv(1024)
-#         if returnFileSize == fileSizeBytes:
-#             file_to_send = open(fileNameString, 'rb')
-#             file_data = file_to_send.read()
-#             s.send(file_data)
-#     else:
-#         print("File not found")
-#
-# # after succesful handshake, the client's secure session is handled by this method
-# def handleSecureSession(sock, client_secure_session_keys):
-#     log("Secure session established...")
-#     command = sock.recv(1024)
-#     stringData = command.decode('utf-8')
-#     print("Waiting for first command")
-#     while stringData.strip().upper() != EXIT_COMMAND:
-#         print("In command loop")
-#         if stringData.strip().upper() == FILE_UPLOAD_CMD:
-#             sock.send(FILE_UPLOAD_CMD.encode())
-#             handleFileUpload(sock, client_secure_session_keys)
-#         elif stringData.strip().upper() == FILE_RETRIEVE_CMD:
-#             sock.send(FILE_RETRIEVE_CMD.encode())
-#             handleFileDownload(sock, client_secure_session_keys)
-#         print("Awaiting New Command")
-#         command = sock.recv(1024)
-#         stringData = command.decode('utf-8')
-#     # for now, let's just transfer a file as a test
-#     # handleFileUpload(sock)
-#     sock.send(EXIT_COMMAND.encode())
-
-
 # method for handling a file upload
 def handleFileUpload(sock, client_secure_session_keys):
     log("Handling File Upload")
@@ -449,8 +394,7 @@ def initializeUsersDatabase():
 def main():
     log("STARTING SECURE FILE TRANSFER SERVER")
     initializeUsersDatabase()
-    port = 60000
-    s = socket.socket()             
+    s = socket.socket()
     s.bind(('localhost', SERVER_PORT))      
     s.listen(5)                
     log('Server listening on port {}.'.format(SERVER_PORT))
