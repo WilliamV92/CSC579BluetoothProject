@@ -245,6 +245,14 @@ def fileUpload(s, session_key):
     else:
         print("Sizes do not match")
         sendEncrypted(s, session_key, "END".encode())
+    print("Wait for server file upload response")
+    serverUploadResponse = decryptAndVerifyIntegrity(session_key, s.recv(1024))
+    serverResponseString = serverUploadResponse.decode('utf-8')
+    if(serverResponseString == "SUCCESS"):
+        print("Upload Succeeded")
+        os.remove(filename)
+    else:
+        print("Upload Failed")
 
 # method for performing file download
 def fileDownload(s, session_key):
@@ -273,6 +281,8 @@ def fileDownload(s, session_key):
     data = decryptAndVerifyIntegrity(session_key, encrypted_data)
     local_file.write(data)
     local_file.close()
+    print("Send download confirmation to server")
+    sendEncrypted(s, session_key, "SUCCESS".encode())
 
 # after succesful handshake, the secure session with a server is handled by this method
 def handleSecureSession(s, session_key):
