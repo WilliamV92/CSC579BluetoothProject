@@ -382,11 +382,12 @@ def handleFileDownload(s, client_secure_session_keys):
         file_data = file_to_send.read()
         iv = generateAesIv()
         encrypted_message_data = encryptAndHash(client_secure_session_keys.session_key, iv, file_data)
-        fileSizeBytes = bytes([len(encrypted_message_data)])
+        fileSizeString = str(len(encrypted_message_data))
         print("Sending file size")
-        sendEncrypted(s, client_secure_session_keys.session_key, fileSizeBytes)
+        sendEncrypted(s, client_secure_session_keys.session_key, fileSizeString.encode())
         returnFileSize = decryptAndVerifyIntegrity(client_secure_session_keys.session_key, s.recv(1024))
-        if (returnFileSize == fileSizeBytes):
+        returnFileSizeString = returnFileSize.decode('utf-8')
+        if (returnFileSizeString == fileSizeString):
             print("Proceed with Upload")
             bytes_sent = 0
             encrypted_data_size = len(encrypted_message_data)
