@@ -321,6 +321,8 @@ def handleFileUpload(sock, client_secure_session_keys):
     print(len(encrypted_data))
     data = decryptAndVerifyIntegrity(client_secure_session_keys.session_key, encrypted_data)
     storeFileEncrypted(filename, data, client_secure_session_keys.persistence_keys)
+    print("Send Upload Confirmation")
+    sendEncrypted(sock, client_secure_session_keys.session_key, "SUCCESS".encode())
 
 # method for handling a file download
 def handleFileDownload(s, client_secure_session_keys):
@@ -356,6 +358,13 @@ def handleFileDownload(s, client_secure_session_keys):
                 encrypted_message_data = encrypted_message_data[trim_size:]
                 s.send(next_chunk)
             print(bytes_sent)
+            clientDownloadResponse = decryptAndVerifyIntegrity(client_secure_session_keys.session_key, s.recv(1024))
+            clientResponseString = clientDownloadResponse.decode('utf-8')
+            if (clientResponseString == "SUCCESS"):
+                print("Download Succeeded")
+                os.remove(masked_file_name)
+            else:
+                print("Download Failed")
     else:
         print("File not found")
 
