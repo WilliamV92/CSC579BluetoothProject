@@ -277,11 +277,10 @@ def storeFileEncrypted(plaintext_filename, plaintext_file_data, persistence_key)
     masked_filename = generateMaskedFileName(plaintext_filename, persistence_key)
     writeEncryptedFile(masked_filename, plaintext_file_data, persistence_key)
 
-# given plaintext filename, find file with masked name, read in encrypted file,
-#  decrypt with user's persitence key and return plaintext file data
-def retrieveEncryptedFile(plaintext_filename, persistence_key):
-    masked_filename = generateMaskedFileName(plaintext_filename, persistence_key)
-    decrypted_file_data = getEncryptedFileData(masked_filename, persistence_key)
+# given masked filename, find file with masked name, read in encrypted file,
+#  decrypt with user's persistence key and return plaintext file data
+def retrieveEncryptedFile(masked_file_name, persistence_key):
+    decrypted_file_data = getEncryptedFileData(masked_file_name, persistence_key)
     return decrypted_file_data
 
 # helper method for sending encrypted data with a given key
@@ -379,11 +378,11 @@ def handleFileDownload(s, client_secure_session_keys):
     requestedFileName = decryptAndVerifyIntegrity(client_secure_session_keys.session_key, s.recv(1024))
     fileNameString = requestedFileName.decode('utf-8')
     print(fileNameString)
-    my_file = Path(fileNameString)
+    masked_file_name = generateMaskedFileName(fileNameString, client_secure_session_keys.persistence_keys)
+    my_file = Path(masked_file_name)
     if my_file.is_file() is True:
         print("File found")
-        file_to_send = open(fileNameString, 'rb')
-        file_data = file_to_send.read()
+        file_data = retrieveEncryptedFile(masked_file_name, client_secure_session_keys.persistence_keys)
         iv = generateAesIv()
         encrypted_message_data = encryptAndHash(client_secure_session_keys.session_key, iv, file_data)
         fileSizeString = str(len(encrypted_message_data))
