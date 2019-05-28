@@ -6,6 +6,14 @@ from Crypto.Signature import PKCS1_v1_5
 from Crypto import Random
 from Crypto.PublicKey import RSA
 
+# flag to turn logging on or off
+LOGGING_ENABLED = False
+
+# helper method for logging. Logging controlled with global flag.
+def log(message):
+    if LOGGING_ENABLED:
+        print(message)
+
 '''
 Methods for Symmetric Encryption with AES in CBC Mode, including helper methods
 for adding and removing padding.
@@ -18,11 +26,11 @@ def encrypt(key, iv, plaintext):
     try:
         cipher = AES.new(key, AES.MODE_CBC, iv)
         padded = pad(AES.block_size, plaintext)
-        print(b"padded plaintext+digest: " + padded)
+        log(b"padded plaintext+digest: " + padded)
         cipher_text = cipher.encrypt(padded)
         cipher_text = iv + cipher_text
     except Exception:
-        print(Exception)
+        log(Exception)
         cipher_text = None
     return cipher_text
 
@@ -34,10 +42,10 @@ def decrypt(block_size, key, ciphertext):
     plaintext = None
     try:
         iv = ciphertext[0:block_size]
-        print("iv:")
-        print(iv)
+        log("iv:")
+        log(iv)
         ciphertext = ciphertext[block_size:]
-        print(ciphertext)
+        log(ciphertext)
         cipher = AES.new(key, AES.MODE_CBC, iv)
         plaintext = cipher.decrypt(ciphertext)
         plaintext = unpad(plaintext)
@@ -59,8 +67,8 @@ def pad(blocksize, text):
     padding = b'\x80'
     for i in range(length - 1):
         padding = padding + b"\x00"
-    print("pad: ")
-    print(padding)
+    log("pad: ")
+    log(padding)
     return text + padding
 
 # returns data with Ones and Zeroes padding removed
@@ -84,7 +92,7 @@ when unpacking the message.
 def pad(blocksize, text):
     length = blocksize - (len(text) % blocksize)
     pad_bytes = Random.new().read(length)
-    print(b"pad: " + pad_bytes)
+    log(b"pad: " + pad_bytes)
     return text + pad_bytes
 
 
@@ -100,8 +108,8 @@ Messages for generating a hash digest and verifying data integrity
 def sha256Hash(text):
     h = SHA256.new()
     h.update(text)
-    print("Digest: ")
-    print(h.digest())
+    log("Digest: ")
+    log(h.digest())
     return h.digest()
 
 # returns a hex digest of given text using SHA-256
@@ -129,8 +137,8 @@ def verifyIntegrity(data):
     try:
         text, digest = removeSha256Digest(data)
         recalculated_digest = sha256Hash(text)
-        print("new hash: ")
-        print(recalculated_digest)
+        log("new hash: ")
+        log(recalculated_digest)
         is_valid = True if digest == recalculated_digest else False
     except:
         is_valid = False
@@ -149,7 +157,7 @@ def generateMaskedText(text, persistence_key):
     try:
         h = HMAC.new(persistence_key)
         h.update(text)
-        print(h.hexdigest())
+        log(h.hexdigest())
         masked_text = h.hexdigest()
     except:
         masked_text = None
@@ -165,7 +173,7 @@ def encryptAndHash(key, iv, plaintext):
     ciphertext = None
     try:
         plaintext = appendSha256Digest(plaintext)
-        print(b"plaintext + digest: " + plaintext)
+        log(b"plaintext + digest: " + plaintext)
         ciphertext = encrypt(key, iv, plaintext)
     except:
         ciphertext = None
@@ -175,9 +183,9 @@ def decryptAndVerifyIntegrity(key, ciphertext):
     plaintext = None
     try:
         data = decrypt(AES.block_size, key, ciphertext)
-        print(b"decrypted (data + digest): " + data)
+        log(b"decrypted (data + digest): " + data)
         isValid = verifyIntegrity(data)
-        print("isValid: {}".format(isValid))
+        log("isValid: {}".format(isValid))
         if isValid:
             plaintext, digest = removeSha256Digest(data)
     except:
@@ -221,9 +229,9 @@ def rsa_verify_signature(rsa_public_key, data, signature):
         verifier = PKCS1_v1_5.new(rsa_public_key)
         if verifier.verify(h, signature):
             verified = True
-            print("The signature is authentic.")
+            log("The signature is authentic.")
         else:
-            print("The signature is not authentic.")
+            log("The signature is not authentic.")
     except:
         verified = False
     return verified
@@ -323,7 +331,7 @@ def main():
     user_password = "pwd1"
     persistence_key = generatePersistenceKeyFromPassword(user_password)
     masked_filename = generateMaskedText("car.png".encode(), persistence_key)
-    print(masked_filename)
+    log(masked_filename)
 
     # this sample works for reading a file, encrypting an image file, saving an encrypted file, reading it back in,
     # decrypting the data, then saving the file under a new name.
@@ -344,49 +352,49 @@ def main():
 # Test code for RSA public key functions
     rsa_key_pair = generateRsaPublicKeyPair()
     public_key = getPublicKeyToExport(rsa_key_pair)
-    print("public key original: ")
-    print(public_key)
+    log("public key original: ")
+    log(public_key)
     imported_pk = importPublicKey(public_key)
-    print("public key import test: ")
-    print(imported_pk.exportKey('DER'))
-    print("32byte key:")
+    log("public key import test: ")
+    log(imported_pk.exportKey('DER'))
+    log("32byte key:")
     session_key = Random.new().read(32)
-    print(session_key)
+    log(session_key)
     ciphertext = rsa_encrypt(imported_pk, session_key)
-    print("session key encrypted with public key: ")
-    print(ciphertext)
+    log("session key encrypted with public key: ")
+    log(ciphertext)
     plaintext = rsa_decrypt(rsa_key_pair, ciphertext)
-    print("plaintext: ")
-    print(plaintext)
-    print("Sign 32byte session key with Private Key:")
+    log("plaintext: ")
+    log(plaintext)
+    log("Sign 32byte session key with Private Key:")
     signature = rsa_sign(rsa_key_pair, session_key)
-    print(signature)
+    log(signature)
     rsa_verify_signature(imported_pk, session_key, signature)
-    print("sign encrypted: ")
+    log("sign encrypted: ")
     sig_cipher = rsa_encrypt(imported_pk, signature)
-    print(sig_cipher)
+    log(sig_cipher)
     sig_plain = rsa_decrypt(rsa_key_pair, sig_cipher)
-    print("sign plain again: ")
-    print(sig_plain)
-    print(len(sig_plain))
+    log("sign plain again: ")
+    log(sig_plain)
+    log(len(sig_plain))
 
 # Test code for symmetric encryption and hash functions.
     key = b'Sixteen byte key'
-    print("iv:")
+    log("iv:")
     iv = generateAesIv()
-    print(iv)
+    log(iv)
     plaintext = b'01234567890012345'
-    print("plaintext: ")
-    print(plaintext)
+    log("plaintext: ")
+    log(plaintext)
 
     cipher_text = encryptAndHash(key, iv, plaintext)
-    print("ciphertext (iv + {text + hash} + padding: ")
-    print(cipher_text)
+    log("ciphertext (iv + {text + hash} + padding: ")
+    log(cipher_text)
 
     decrypted_text = decryptAndVerifyIntegrity(key, cipher_text)
-    print("decrypted text: ")
-    print(decrypted_text)
-    print(decrypted_text.decode())
+    log("decrypted text: ")
+    log(decrypted_text)
+    log(decrypted_text.decode())
 
 main()
 '''

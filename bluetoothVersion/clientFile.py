@@ -115,16 +115,12 @@ def buildKeyExchange(rsa_key_pair, server_public_key):
     message = KEY_EXCHANGE.encode()
     # generate 256 bit session key to use for AES
     session_key = generateSessionKey(32)
-    print("session key:")
-    print(session_key)
     # build 1st segment of message
     message = message + session_key
     # encrypt 1st segment of message with the server's public key, so only server can use this session key
     session_key_message_cipher_text = rsa_encrypt(server_public_key, message)
     # sign session key with client's private key
     signature = rsa_sign(rsa_key_pair, session_key)
-    print("session key signature:")
-    print(signature)
     # build full message: 1st segment + signature
     complete_message = session_key_message_cipher_text + signature
     # encrypt and hash full message with MASTER_KEY
@@ -311,7 +307,7 @@ def main():
         s.close()
     except:
         log("Connection terminated unexpectedly.")
-    print('connection closed')
+    log('connection closed')
 
 main()
 

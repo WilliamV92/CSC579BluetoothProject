@@ -401,7 +401,7 @@ def main():
     initializeUsersDatabase()
     s = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
     s.bind(("", SERVER_PORT))
-    s.listen(5)  
+    s.listen(5)
     log('Server listening on port {}.'.format(SERVER_PORT))
     while True:
         log("Waiting for connection...")
