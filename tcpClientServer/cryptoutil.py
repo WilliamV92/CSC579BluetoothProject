@@ -139,7 +139,7 @@ def verifyIntegrity(data):
 def generatePersistenceKeyFromPassword(password):
     # take SHA-1 hash of password - 160 bit digest
     sha_hash = SHA.new()
-    sha_hash.update(b'Hello')
+    sha_hash.update(password)
     initial_digest = sha_hash.digest()
     # take sha-256 hash of initial digest
     return sha256Hash(initial_digest)
@@ -315,12 +315,12 @@ def readUsersFile(key, filename):
 def main():
 
     # test code to set up a users file with plaintext usernames and hashed passwords
-    list_of_users = createMockUserDataForFile()
-    writeUsersFile(b'*%Hah%zgh&hFL#Db', "users", list_of_users)
-    user_database = readUsersFile(b'*%Hah%zgh&hFL#Db', "users")
+    #list_of_users = createMockUserDataForFile()
+    #writeUsersFile(b'*%Hah%zgh&hFL#Db', "users", list_of_users)
+    #user_database = readUsersFile(b'*%Hah%zgh&hFL#Db', "users")
 
     # code to test generated masked text with keyed hash
-    user_password = "userpassword"
+    user_password = "pwd1"
     persistence_key = generatePersistenceKeyFromPassword(user_password)
     masked_filename = generateMaskedText("car.png".encode(), persistence_key)
     print(masked_filename)
@@ -328,15 +328,15 @@ def main():
     # this sample works for reading a file, encrypting an image file, saving an encrypted file, reading it back in,
     # decrypting the data, then saving the file under a new name.
     # get data to work with
-    file_to_send = open("car.png", 'rb')
-    file_data = file_to_send.read()
+    #file_to_send = open("car.png", 'rb')
+    #file_data = file_to_send.read()
     # write encrypted file
-    writeEncryptedFile(masked_filename, file_data, persistence_key)
+    #writeEncryptedFile(masked_filename, file_data, persistence_key)
 
     # read encrypted file and get the data as plaintext
     decrypted_file = getEncryptedFileData(masked_filename, persistence_key)
     # write decrypted back out to file to confirm it worked
-    local_file = open("newCarTest.png", 'wb')
+    local_file = open("newCarTestSecureUpload.png", 'wb')
     local_file.write(decrypted_file)
     local_file.close()
 

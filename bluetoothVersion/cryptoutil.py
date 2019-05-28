@@ -139,7 +139,7 @@ def verifyIntegrity(data):
 def generatePersistenceKeyFromPassword(password):
     # take SHA-1 hash of password - 160 bit digest
     sha_hash = SHA.new()
-    sha_hash.update(b'Hello')
+    sha_hash.update(password)
     initial_digest = sha_hash.digest()
     # take sha-256 hash of initial digest
     return sha256Hash(initial_digest)

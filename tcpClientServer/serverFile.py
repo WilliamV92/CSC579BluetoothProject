@@ -251,7 +251,7 @@ def validateClientAuth(data, session_key):
                 hashed_password = sha256HexDigest(password.encode())
                 if authenticate_user(username, hashed_password):
                     isValid = True
-                    persistence_key = generatePersistenceKeyFromPassword(password)
+                    persistence_key = generatePersistenceKeyFromPassword(password.encode())
                     masked_user_directory = generateMaskedText(username.encode(), persistence_key)
     return isValid, persistence_key, masked_user_directory
 
