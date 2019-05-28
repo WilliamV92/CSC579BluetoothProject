@@ -24,47 +24,50 @@ def log(message):
 def performHandshake(s):
     log("Starting secure handshake...")
     session_key = None
+    try:
+        # send CLIENT HELLO
+        message, rsa_key_pair = buildClientHello()
+        log("SENDING {}".format(message))
+        s.send(message)
 
-    # send CLIENT HELLO
-    message, rsa_key_pair = buildClientHello()
-    log("SENDING {}".format(message))
-    s.send(message)
+        # *** wait for SERVER HELLO ***
+        server_public_key = None
+        data = s.recv(1024)
+        # validate SERVER HELLO
+        if data:
+            isValid, server_public_key = validateServerHello(data)
+            if isValid:
+                message, session_key = buildKeyExchange(rsa_key_pair, server_public_key)
+                log("SENDING {}".format(message))
+                s.send(message)
+            else:
+                log("Handshake Failed.")
+                return False, None
+        else:
+            log("Handshake Failed.")
+            return False, None
 
-    # *** wait for SERVER HELLO ***
-    server_public_key = None
-    data = s.recv(1024)
-    # validate SERVER HELLO
-    if data:
-        isValid, server_public_key = validateServerHello(data)
-        if isValid:
-            message, session_key = buildKeyExchange(rsa_key_pair, server_public_key)
+        # *** wait for SERVER SESSION BEGIN ***
+        data = s.recv(1024)
+        # validate SERVER SESSION BEGIN
+        if data and validateServerSessionBegin(session_key, data):
+            message = buildClientSessionBegin(session_key)
             log("SENDING {}".format(message))
             s.send(message)
         else:
             log("Handshake Failed.")
             return False, None
-    else:
-        log("Handshake Failed.")
-        return False, None
 
-    # *** wait for SERVER SESSION BEGIN ***
-    data = s.recv(1024)
-    # validate SERVER SESSION BEGIN
-    if data and validateServerSessionBegin(session_key, data):
-        message = buildClientSessionBegin(session_key)
-        log("SENDING {}".format(message))
-        s.send(message)
-    else:
-        log("Handshake Failed.")
-        return False, None
-
-    # perform client authentication
-    if not performClientAuthentication(s, session_key):
-        log("Handshake Failed.")
+        # perform client authentication
+        if not performClientAuthentication(s, session_key):
+            log("Handshake Failed.")
+            return False, None
+    except:
         return False, None
 
     log("Handshake Successful.")
     return True, session_key
+
 
 def performClientAuthentication(s, session_key):
     authSuccess = False
@@ -296,15 +299,18 @@ def handleSecureSession(s, session_key):
 def main():
     log("STARTING SECURE FILE TRANSFER CLIENT")
     s = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
-    log("Attempting to connect to remote peer at {}:{}.".format(REMOTE_HOST_ADDRESS, REMOTE_HOST_PORT))   
-    s.connect((REMOTE_HOST_ADDRESS, REMOTE_HOST_PORT))
-    log("Connection Successful.")
-    handshake_successful, session_key = performHandshake(s)
-    if handshake_successful and session_key is not None:
-        handleSecureSession(s, session_key)
-    else:
-        log("Handshake failed. Terminating conneciton")
-    s.close()
+    try:
+        log("Attempting to connect to remote peer at {}:{}.".format(REMOTE_HOST_ADDRESS, REMOTE_HOST_PORT))
+        s.connect((REMOTE_HOST_ADDRESS, REMOTE_HOST_PORT))
+        log("Connection Successful.")
+        handshake_successful, session_key = performHandshake(s)
+        if handshake_successful and session_key is not None:
+            handleSecureSession(s, session_key)
+        else:
+            log("Handshake failed. Terminating connection")
+        s.close()
+    except:
+        log("Connection terminated unexpectedly.")
     print('connection closed')
 
 main()

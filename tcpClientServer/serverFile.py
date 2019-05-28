@@ -24,55 +24,58 @@ def performHandshake(conn):
     session_key = None
     rsa_key_pair = None
     client_public_key = None
-
-    # *** wait for CLIENT HELLO ***
-    data = conn.recv(1024)
-    # validate CLIENT HELLO
-    if data:
-        isValid, client_public_key = validateClientHello(data)
-        if isValid:
-            message, rsa_key_pair = buildServerHello()
-            log("SENDING {}".format(message))
-            conn.send(message)
+    try:
+        # *** wait for CLIENT HELLO ***
+        data = conn.recv(1024)
+        # validate CLIENT HELLO
+        if data:
+            isValid, client_public_key = validateClientHello(data)
+            if isValid:
+                message, rsa_key_pair = buildServerHello()
+                log("SENDING {}".format(message))
+                conn.send(message)
+            else:
+                log("Handshake Failed.")
+                return False, None
         else:
             log("Handshake Failed.")
             return False, None
-    else:
-        log("Handshake Failed.")
-        return False, None
 
-    # *** wait for KEY EXCHANGE ***
-    data = conn.recv(1024)
-    # validate KEY EXCHANGE
-    if data:
-        isValid, session_key = validateKeyExchange(data, rsa_key_pair, client_public_key)
-        if isValid:
-            message = buildServerSessionBegin(session_key)
-            log("SENDING {}".format(message))
-            conn.send(message)
+        # *** wait for KEY EXCHANGE ***
+        data = conn.recv(1024)
+        # validate KEY EXCHANGE
+        if data:
+            isValid, session_key = validateKeyExchange(data, rsa_key_pair, client_public_key)
+            if isValid:
+                message = buildServerSessionBegin(session_key)
+                log("SENDING {}".format(message))
+                conn.send(message)
+            else:
+                log("Handshake Failed.")
+                return False, None
         else:
             log("Handshake Failed.")
             return False, None
-    else:
+
+        # *** wait for CLIENT SESSION BEGIN ***
+        data = conn.recv(1024)
+        # validate CLIENT SESSION BEGIN
+        if data and validateClientSessionBegin(session_key, data):
+            log("Waiting for client authentication...")
+        else:
+            log("Handshake Failed.")
+            return False, None
+
+        # handle client authentication
+        isValidUser, persistence_key, masked_user_directory = handleClientAuth(conn, session_key)
+        if not isValidUser:
+            log("Handshake Failed.")
+            return False, None
+
+        client_secure_session_keys = ClientSecureSessionKeys(session_key, persistence_key, masked_user_directory)
+    except:
         log("Handshake Failed.")
         return False, None
-
-    # *** wait for CLIENT SESSION BEGIN ***
-    data = conn.recv(1024)
-    # validate CLIENT SESSION BEGIN
-    if data and validateClientSessionBegin(session_key, data):
-        log("Waiting for client authentication...")
-    else:
-        log("Handshake Failed.")
-        return False, None
-
-    # handle client authentication
-    isValidUser, persistence_key, masked_user_directory = handleClientAuth(conn, session_key)
-    if not isValidUser:
-        log("Handshake Failed.")
-        return False, None
-
-    client_secure_session_keys = ClientSecureSessionKeys(session_key, persistence_key, masked_user_directory)
 
     log("Handshake Successful.")
     return True, client_secure_session_keys
@@ -409,13 +412,16 @@ def main():
     log('Server listening on port {}.'.format(SERVER_PORT))
     while True:
         log("Waiting for connection...")
-        conn, addr = s.accept()     
-        log("Accepted connection from {}.".format(addr))
-        handshake_successful, client_secure_session_keys = performHandshake(conn)
-        if handshake_successful and client_secure_session_keys is not None:
-            handleSecureSession(conn, client_secure_session_keys)
-        else:
-            log("Handshake failed. Terminating conneciton")
+        try:
+            conn, addr = s.accept()
+            log("Accepted connection from {}.".format(addr))
+            handshake_successful, client_secure_session_keys = performHandshake(conn)
+            if handshake_successful and client_secure_session_keys is not None:
+                handleSecureSession(conn, client_secure_session_keys)
+            else:
+                log("Handshake failed. Terminating conneciton")
+        except:
+            log("Connection terminated unexpectedly.")
         log("Secure session ended. Closing connection.")
         conn.close()
 

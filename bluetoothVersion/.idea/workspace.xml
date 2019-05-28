@@ -2,12 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ccc6faeb-f207-4613-9f84-b029fbc882dd" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/car.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cryptoutil.py" beforeDir="false" afterPath="$PROJECT_DIR$/cryptoutil.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clientFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/clientFile.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/serverFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/serverFile.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/testFile.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../tcpClientServer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tcpClientServer/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tcpClientServer/cryptoutil.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tcpClientServer/cryptoutil.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tcpClientServer/clientFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tcpClientServer/clientFile.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tcpClientServer/serverFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tcpClientServer/serverFile.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -54,20 +55,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/clientFile.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="137">
-              <caret line="207" column="14" lean-forward="true" selection-start-line="207" selection-start-column="14" selection-end-line="207" selection-end-column="14" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/serverFile.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="245" column="24" lean-forward="true" selection-start-line="245" selection-start-column="24" selection-end-line="245" selection-end-column="24" />
+            <state relative-caret-position="69">
+              <caret line="300" column="51" selection-start-line="300" selection-start-column="51" selection-end-line="300" selection-end-column="51" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -76,10 +65,22 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/serverFile.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="89">
+              <caret line="403" column="17" selection-start-line="403" selection-start-column="17" selection-end-line="403" selection-end-column="17" />
+              <folding>
+                <element signature="e#0#13#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cryptoutil.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="141" column="21" selection-start-line="141" selection-end-line="142" />
+            <state relative-caret-position="204">
+              <caret line="142" column="38" lean-forward="true" selection-start-line="142" selection-start-column="38" selection-end-line="142" selection-end-column="38" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
               </folding>
@@ -100,8 +101,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/clientFile.py" />
         <option value="$PROJECT_DIR$/cryptoutil.py" />
+        <option value="$PROJECT_DIR$/clientFile.py" />
         <option value="$PROJECT_DIR$/serverFile.py" />
       </list>
     </option>
@@ -275,35 +276,35 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/clientFile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="137">
-          <caret line="207" column="14" lean-forward="true" selection-start-line="207" selection-start-column="14" selection-end-line="207" selection-end-column="14" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/serverFile.py.bak">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/serverFile.py">
+    <entry file="file://$PROJECT_DIR$/cryptoutil.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="245" column="24" lean-forward="true" selection-start-line="245" selection-start-column="24" selection-end-line="245" selection-end-column="24" />
+        <state relative-caret-position="204">
+          <caret line="142" column="38" lean-forward="true" selection-start-line="142" selection-start-column="38" selection-end-line="142" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/clientFile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="69">
+          <caret line="300" column="51" selection-start-line="300" selection-start-column="51" selection-end-line="300" selection-end-column="51" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cryptoutil.py">
+    <entry file="file://$PROJECT_DIR$/serverFile.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="141" column="21" selection-start-line="141" selection-end-line="142" />
+        <state relative-caret-position="89">
+          <caret line="403" column="17" selection-start-line="403" selection-start-column="17" selection-end-line="403" selection-end-column="17" />
           <folding>
-            <element signature="e#0#29#0" expanded="true" />
+            <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
