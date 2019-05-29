@@ -10,7 +10,7 @@ over Bluetooth. The application has a number of dependencies:
 2) PyCrypto 2.6.1 (for cryptography functions)
 3) PyBluez 0.22 (for bluetooth communications between client and server)
 
-The file must be in the same directory has protocolConstants.py and cryptoutil.py.
+The file must be in the same directory as protocolConstants.py and cryptoutil.py.
 
 For more complete user instructions, including a list of three seeded usernames and passwords,
 see the README file.
