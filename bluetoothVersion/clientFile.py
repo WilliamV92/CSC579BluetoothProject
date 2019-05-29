@@ -292,7 +292,7 @@ def fileDownload(s, session_key):
     print("Waiting for file size")
     fileSizeData = decryptAndVerifyIntegrity(session_key, s.recv(1024))
     fileSizeString = fileSizeData.decode('utf-8')
-    if(fileSizeString is not FNF_COMMAND):
+    if(fileSizeString != FNF_COMMAND):
         fileSizeInt = int(fileSizeString)
         print("File Size")
         print(fileSizeString)
