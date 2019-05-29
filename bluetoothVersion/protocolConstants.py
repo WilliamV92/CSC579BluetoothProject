@@ -1,3 +1,12 @@
+'''
+CSC 579 - HW3
+Peter DeAngelis
+William Vukasovic
+
+This file contains protocol commands for the secure remote file storage system. This
+file is required by the client and server to send proper protocol commands.
+
+'''
 # constants defining protocol commands
 CLIENT_HELLO = "CLIENT HELLO"
 SERVER_HELLO = "SERVER HELLO"

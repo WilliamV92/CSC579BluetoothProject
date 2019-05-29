@@ -1,3 +1,13 @@
+'''
+CSC 579 - HW3
+Peter DeAngelis
+William Vukasovic
+
+This file contains a number of helper methods for various cryptographic functions
+that are needed by both the client and server. These utility methods are convenience
+functions that help the calling server and client code make better use of the lower
+level cryptography functions in PyCrypto 2.6.1.
+'''
 from Crypto.Cipher import AES
 from Crypto.Hash import SHA256
 from Crypto.Hash import SHA
@@ -16,7 +26,7 @@ def log(message):
 
 '''
 Methods for Symmetric Encryption with AES in CBC Mode, including helper methods
-for adding and removing padding.
+for adding and removing padding and generating keys and IV's. 
 '''
 # returns cipher text for the given plaintext, encrypted with AES in CBC mode.
 # the iv is prepended to the cipher text when returned, so it can be used by decryption method.
@@ -102,7 +112,7 @@ def unpad(original_len, padded_text):
 '''
 
 '''
-Messages for generating a hash digest and verifying data integrity
+Methods for generating a hash digest and verifying data integrity
 '''
 # returns a digest of given text using SHA-256
 def sha256Hash(text):
@@ -194,7 +204,7 @@ def decryptAndVerifyIntegrity(key, ciphertext):
 
 
 '''
-Methods involving public key encryption with RSA
+Methods involving public key encryption and signing with RSA
 '''
 def generateRsaPublicKeyPair():
     rsa_key_pair = RSA.generate(2048)

@@ -4,8 +4,11 @@
     <list default="true" id="441176a2-9e52-496b-b9b7-8b05f1ba9de7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../bluetoothVersion/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../bluetoothVersion/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../bluetoothVersion/car.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bluetoothVersion/clientFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/../bluetoothVersion/clientFile.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bluetoothVersion/cryptoutil.py" beforeDir="false" afterPath="$PROJECT_DIR$/../bluetoothVersion/cryptoutil.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bluetoothVersion/protocolConstants.py" beforeDir="false" afterPath="$PROJECT_DIR$/../bluetoothVersion/protocolConstants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bluetoothVersion/serverFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/../bluetoothVersion/serverFile.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../bluetoothVersion/testFile.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

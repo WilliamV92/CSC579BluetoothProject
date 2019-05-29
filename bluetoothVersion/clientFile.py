@@ -1,10 +1,28 @@
-import socket
+'''
+CSC 579 - HW3
+Peter DeAngelis
+William Vukasovic
+
+This is the client-side of a secure remote file storage system. The client and server communicate
+over Bluetooth. The application has a number of dependencies:
+
+1) Python 3
+2) PyCrypto 2.6.1 (for cryptography functions)
+3) PyBluez 0.22 (for bluetooth communications between client and server)
+
+The file must be in the same directory has protocolConstants.py and cryptoutil.py.
+
+To connect to a remote server, change the hardcoded address below, REMOTE_HOST_ADDRESS, to
+the Bluetooth address of the server.
+
+For more complete user instructions, including a list of three seeded usernames and passwords,
+see the README file.
+'''
 import bluetooth
 from protocolConstants import *
 from pathlib import Path
 import os
 from cryptoutil import *
-
 
 # flag to turn logging on or off
 LOGGING_ENABLED = True
@@ -19,6 +37,12 @@ MASTER_KEY = b'*%Hah%zgh&hFL#Db'
 def log(message):
     if LOGGING_ENABLED:
         print(message)
+
+'''
+SECTION 1:
+Methods for executing the handshake protocol, including various helper methods
+for building and validating handshake commands. 
+'''
 
 # method for handling secure handshake
 def performHandshake(s):
@@ -192,6 +216,12 @@ def validateServerAuthReply(session_key, data):
     elif data is not None and data.decode() == SERVER_AUTH_REPLY_TERMINATE:
         reply = SERVER_AUTH_REPLY_TERMINATE
     return reply
+
+'''
+SECTION 2:
+Methods for handling the secure session, including helper methods for
+the file upload and download operations
+'''
 
 # helper method for sending encrypted data with a given key
 def sendEncrypted(sock, session_key, message_data):

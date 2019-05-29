@@ -1,4 +1,20 @@
-import socket
+'''
+CSC 579 - HW3
+Peter DeAngelis
+William Vukasovic
+
+This is the server-side of a secure remote file storage system. The client and server communicate
+over Bluetooth. The application has a number of dependencies:
+
+1) Python 3
+2) PyCrypto 2.6.1 (for cryptography functions)
+3) PyBluez 0.22 (for bluetooth communications between client and server)
+
+The file must be in the same directory has protocolConstants.py and cryptoutil.py.
+
+For more complete user instructions, including a list of three seeded usernames and passwords,
+see the README file.
+'''
 import bluetooth
 from protocolConstants import *
 from pathlib import Path
@@ -18,6 +34,12 @@ MASTER_KEY = b'*%Hah%zgh&hFL#Db'
 USERS_FILENAME = "users"
 # dictionary to store usernames and hashed passwords
 USER_DATABASE = {}
+
+'''
+SECTION 1:
+Methods for executing the handshake protocol, including various helper methods
+for building and validating handshake commands. 
+'''
 
 # method for handling secure handshake
 def performHandshake(conn):
@@ -269,6 +291,13 @@ def authenticate_user(username, hashed_password):
     return valid_user
 
 '''
+SECTION 2:
+Methods for handling the secure session, including helper methods for
+the file upload and download operations as well as storing and retrieving
+encrypted files on the server's local file system.
+'''
+
+'''
 Helper methods for storing and retrieving encrypted files
 '''
 def generateMaskedFileName(plaintext_filename, persistence_key):
@@ -392,6 +421,8 @@ def handleSecureSession(sock, client_secure_session_keys):
     # handleFileUpload(sock)
     sendEncrypted(sock, client_secure_session_keys.session_key, EXIT_COMMAND.encode())
 
+# method to read in "users" file with usernames and hashed passwords
+# (or create one with seeded data if it does not already exist)
 def initializeUsersDatabase():
     log("Initializing users database.")
     global USER_DATABASE
