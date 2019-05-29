@@ -1,4 +1,7 @@
 ﻿Secure Bluetooth Remote File Storage System
+CSC 579 - HW3
+Peter DeAngelis
+William Vukasovic
 
 
 *** Overview ***
